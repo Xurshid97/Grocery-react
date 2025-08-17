@@ -1,6 +1,7 @@
 {
   "name": "ngo-react",
-  "homepage": "https://nigammishra.github.io/Grocery-react",
+  "homepage": "https://curious-peony-d40587.netlify.app/Grocery-react/",
+    "description": "A Grocery Store React Application",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
