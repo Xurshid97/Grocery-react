@@ -167,7 +167,7 @@ const Home = () => {
       setLoaderStatus(false);
       console.log(loaderStatus)
     }, 1500);
-  }, []);
+  }, [loaderStatus]);
 
   return (
     <div>
