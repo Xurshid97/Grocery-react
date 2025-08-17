@@ -8,15 +8,16 @@ import paypal from "../../images/paypal.svg";
 import visa from "../../images/visa.svg";
 import discover from "../../images/discover.svg";
 import ScrollToTop from "../ScrollToTop";
+import AccountNavbar from "./AccountNavbar";
 
-const MyAcconutPaymentMethod = () => {
+const MyAccountPaymentMethod = () => {
   // loading
-  const [loaderStatus, setLoaderStatus] = useState(true);
-  useEffect(() => {
-    setTimeout(() => {
-      setLoaderStatus(false);
-    }, 1500);
-  }, []);
+  const [loaderStatus, setLoaderStatus] = useState(false);
+//   useEffect(() => {
+//     setTimeout(() => {
+//       setLoaderStatus(false);
+//     }, 0);
+//   }, []);
 
   return (
     <div>
@@ -29,84 +30,8 @@ const MyAcconutPaymentMethod = () => {
             {/* container */}
             <div className="container">
               {/* row */}
-              <div className="row">
-                {/* col */}
-                <div className="col-12">
-                  <div className="p-6 d-flex justify-content-between align-items-center d-md-none">
-                    {/* heading */}
-                    <h3 className="fs-5 mb-0">Account Setting</h3>
-                    {/* button */}
-                    <button
-                      className="btn btn-outline-gray-400 text-muted d-md-none"
-                      type="button"
-                      data-bs-toggle="offcanvas"
-                      data-bs-target="#offcanvasAccount"
-                      aria-controls="offcanvasAccount"
-                    >
-                      <i className="fas fa-bars"></i>
-                    </button>
-                  </div>
-                </div>
-                <div className="col-lg-3 col-md-4 col-12 border-end  d-none d-md-block">
-                  <div className="pt-10 pe-lg-10">
-                    {/* nav */}
-                    <ul className="nav flex-column nav-pills nav-pills-dark">
-                      {/* nav item */}
-                      <li className="nav-item">
-                        <Link
-                          className="nav-link "
-                          aria-current="page"
-                          to="/MyAccountOrder"
-                        >
-                          <i className="fas fa-shopping-bag me-2" />
-                          Your Orders
-                        </Link>
-                      </li>
-                      {/* nav item */}
-                      <li className="nav-item">
-                        <Link className="nav-link " to="/MyAccountSetting">
-                          <i className="fas fa-cog me-2" />
-                          Settings
-                        </Link>
-                      </li>
-                      {/* nav item */}
-                      <li className="nav-item">
-                        <Link className="nav-link " to="/MyAccountAddress">
-                          <i className="fas fa-map-marker-alt me-2" />
-                          Address
-                        </Link>
-                      </li>
-                      {/* nav item */}
-                      <li className="nav-item">
-                        <Link
-                          className="nav-link active"
-                          to="/MyAcconutPaymentMethod"
-                        >
-                          <i className="fas fa-credit-card me-2" />
-                          Payment Method
-                        </Link>
-                      </li>
-                      {/* nav item */}
-                      <li className="nav-item">
-                        <Link className="nav-link" to="/MyAcconutNotification">
-                          <i className="fas fa-bell me-2" />
-                          Notification
-                        </Link>
-                      </li>{" "}
-                      {/* nav item */}
-                      <li className="nav-item">
-                        <hr />
-                      </li>
-                      {/* nav item */}
-                      <li className="nav-item">
-                        <Link className="nav-link " to="/Grocery-react/">
-                          <i className="fas fa-sign-out-alt me-2" />
-                          Log out
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
+              <div className="row pt-10">
+                <AccountNavbar currentActive="/MyAccountPaymentMethod" />
                 <div className="col-lg-9 col-md-8 col-12">
                   <div>
                     {loaderStatus ? (
@@ -568,4 +493,4 @@ const MyAcconutPaymentMethod = () => {
   );
 };
 
-export default MyAcconutPaymentMethod;
+export default MyAccountPaymentMethod;

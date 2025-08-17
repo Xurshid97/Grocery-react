@@ -1,1579 +1,450 @@
 import React, { useEffect, useState } from "react";
-import { MagnifyingGlass } from 'react-loader-spinner'
-import assortment from "../../images/assortment-citrus-fruits.png";
 import { Link } from "react-router-dom";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-import product1 from "../../images/category-baby-care.jpg";
-import product2 from "../../images/category-atta-rice-dal.jpg";
-import product3 from "../../images/category-bakery-biscuits.jpg";
-import product4 from "../../images/category-chicken-meat-fish.jpg";
-import product5 from "../../images/category-cleaning-essentials.jpg";
-import product6 from "../../images/category-dairy-bread-eggs.jpg";
-import product7 from "../../images/category-instant-food.jpg";
-import product8 from "../../images/category-pet-care.jpg";
-import product9 from "../../images/category-snack-munchies.jpg";
-import product10 from "../../images/category-tea-coffee-drinks.jpg";
 import ScrollToTop from "../ScrollToTop";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
 
 function Dropdown() {
-  const [openDropdowns, setOpenDropdowns] = useState([]);
+  const categories = useSelector((state) => state.products.categories);
+  const subcategories = useSelector((state) => state.products.subcategories);
+  const products = useSelector((state) => state.products.list);
+  const dispatch = useDispatch();
 
+    // add to cart of redux
+  const addToCart = (product) => {
+        dispatch({
+            type: 'shop_cart/addToCart',
+            payload: product
+        });
+    };
+
+    const handleAddClick = (productName) => {
+        Swal.fire({
+          icon: "success",
+          title: "Added to Cart",
+          text: `${productName} has been added to your cart!`,
+          showConfirmButton: true,
+          timer: 2000,
+        });
+      };
+
+  function generateDropdownData(categories, subcategories) {
+    return categories.map(category => {
+      const items = subcategories
+        .filter(subcat => subcat.category.id === category.id)
+        .map(subcat => subcat.name);
+      return {
+        title: category.name,
+        items: items.length > 0 ? items : ["No subcategories available"]
+      };
+    });
+  }
+  const dropdownData = generateDropdownData(categories, subcategories);
+
+  const [openDropdowns, setOpenDropdowns] = useState([]);
   const toggleDropdown = (index) => {
     if (openDropdowns.includes(index)) {
-      setOpenDropdowns(openDropdowns.filter((item) => item !== index));
+      setOpenDropdowns(openDropdowns.filter(item => item !== index));
     } else {
       setOpenDropdowns([...openDropdowns, index]);
     }
   };
 
-     // loading
-     const [loaderStatus, setLoaderStatus] = useState(true);
-     useEffect(() => {
-       setTimeout(() => {
-         setLoaderStatus(false);
-       }, 1500);
-     }, []);
-   
+  const [loaderStatus, setLoaderStatus] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      setLoaderStatus(false);
+    }, 1500);
+  }, []);
+
+  // Search, filtering, sorting, pagination states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSubcategory, setSelectedSubcategory] = useState(null);
+  const [sortOrder, setSortOrder] = useState("Featured");
+  const [pageSize, setPageSize] = useState(50);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // State for quick view modal product
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  // Filtering logic:
+  // If searchTerm is set, filter by name only
+  // Else if selectedSubcategory is set, filter by subcategory
+  // Else show all products
+  let filteredProducts = [];
+
+  if (searchTerm.trim()) {
+    filteredProducts = products.filter(product =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  } else if (selectedSubcategory) {
+    filteredProducts = products.filter(product =>
+      product.subcategory.name === selectedSubcategory
+    );
+  } else {
+    filteredProducts = products;
+  }
+
+  // Copy before sorting to avoid mutation errors
+  let sortedProducts = [...filteredProducts];
+
+  if (sortOrder === "Low to High") {
+    sortedProducts.sort((a, b) =>
+      (a.cost * (1 - a.discount / 100)) - (b.cost * (1 - b.discount / 100))
+    );
+  } else if (sortOrder === "High to Low") {
+    sortedProducts.sort((a, b) =>
+      (b.cost * (1 - b.discount / 100)) - (a.cost * (1 - a.discount / 100))
+    );
+  }
+
+  // Pagination
+  const totalPages = Math.ceil(sortedProducts.length / pageSize);
+  const paginatedProducts = sortedProducts.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+
   return (
     <div>
-    {loaderStatus ? (
-      <div className="loader-container">
-        {/* <PulseLoader loading={loaderStatus} size={50} color="#0aad0a" /> */}
-        <MagnifyingGlass
-visible={true}
-height="100"
-width="100"
-ariaLabel="magnifying-glass-loading"
-wrapperStyle={{}}
-wrapperclassName="magnifying-glass-wrapper"
-glassColor="#c0efff"
-color="#0aad0a"
-/>
-      </div>
-    ) : (
-      <>
-       <>
-            <ScrollToTop/>
-            </>
-    <div className="container ">
-      
+      <ScrollToTop />
+      <div className="container">
+        <div className="row">
+          <h5 className="mb-3 mt-8"></h5>
 
-      <div className="row">
-        {/* Vertical Dropdowns Column */}
-        <h5 className="mb-3 mt-8">Categories</h5>
-        <div className="col-md-3">
-          {dropdownData.map((dropdown, index) => (
-            <ul className="nav flex-column" key={index}>
-              <li className="nav-item">
-                <Link
-                  className="nav-link"
-                  to="#"
-                  onClick={() => toggleDropdown(index)}
-                  aria-expanded={
-                    openDropdowns.includes(index) ? "true" : "false"
-                  }
-                  aria-controls={`categoryFlush${index + 1}`}
-                >
-                  {dropdown.title} <i className="fa fa-chevron-down"  />
-
-                </Link>
-                <div
-                  className={`collapse ${
-                    openDropdowns.includes(index) ? "show" : ""
-                  }`}
-                  id={`categoryFlush${index + 1}`}
-                >
-                  <div>
-                    <ul className="nav flex-column ms-3">
-                      {dropdown.items.map((item, itemIndex) => (
-                        <li className="nav-item" key={itemIndex}>
-                          <Link className="nav-link" to="#">
-                            {item} 
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          ))}
-          <div>
+          {/* Sidebar */}
+          <div className="col-md-3">
             <div className="py-4">
-              <h5 className="mb-3">Stores</h5>
               <div className="my-4">
-                {/* input */}
+                {/* Search input */}
                 <input
                   type="search"
                   className="form-control"
-                  placeholder="Search by store"
+                  placeholder="Mahsulotlarni qidirish"
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setSelectedSubcategory(null); // clear subcategory when searching
+                    setCurrentPage(1);
+                  }}
                 />
-              </div>
-              {/* form check */}
-              <div className="form-check mb-2">
-                {/* input */}
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  defaultValue
-                  id="eGrocery"
-                  defaultChecked
-                />
-                <label className="form-check-label" htmlFor="eGrocery">
-                  E-Grocery
-                </label>
-              </div>
-              {/* form check */}
-              <div className="form-check mb-2">
-                {/* input */}
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  defaultValue
-                  id="DealShare"
-                />
-                <label className="form-check-label" htmlFor="DealShare">
-                  DealShare
-                </label>
-              </div>
-              {/* form check */}
-              <div className="form-check mb-2">
-                {/* input */}
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  defaultValue
-                  id="Dmart"
-                />
-                <label className="form-check-label" htmlFor="Dmart">
-                  DMart
-                </label>
-              </div>
-              {/* form check */}
-              <div className="form-check mb-2">
-                {/* input */}
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  defaultValue
-                  id="Blinkit"
-                />
-                <label className="form-check-label" htmlFor="Blinkit">
-                  Blinkit
-                </label>
-              </div>
-              {/* form check */}
-              <div className="form-check mb-2">
-                {/* input */}
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  defaultValue
-                  id="BigBasket"
-                />
-                <label className="form-check-label" htmlFor="BigBasket">
-                  BigBasket
-                </label>
-              </div>
-              {/* form check */}
-              <div className="form-check mb-2">
-                {/* input */}
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  defaultValue
-                  id="StoreFront"
-                />
-                <label className="form-check-label" htmlFor="StoreFront">
-                  StoreFront
-                </label>
-              </div>
-              {/* form check */}
-              <div className="form-check mb-2">
-                {/* input */}
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  defaultValue
-                  id="Spencers"
-                />
-                <label className="form-check-label" htmlFor="Spencers">
-                  Spencers
-                </label>
-              </div>
-              {/* form check */}
-              <div className="form-check mb-2">
-                {/* input */}
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  defaultValue
-                  id="onlineGrocery"
-                />
-                <label className="form-check-label" htmlFor="onlineGrocery">
-                  Online Grocery
-                </label>
               </div>
             </div>
-            <div className="py-4">
-              {/* price */}
-              <h5 className="mb-3">Price</h5>
-              <div>
-                {/* range */}
-                <div id="priceRange" className="mb-3" />
-                <small className="text-muted">Price:</small>{" "}
-                <span id="priceRange-value" className="small" />
-              </div>
-            </div>
-            {/* rating */}
-            <div className="py-4">
-              <h5 className="mb-3">Rating</h5>
-              <div>
-                {/* form check */}
-                <div className="form-check mb-2">
-                  {/* input */}
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    defaultValue
-                    id="ratingFive"
-                  />
-                  <label className="form-check-label" htmlFor="ratingFive">
-                    <i className="bi bi-star-fill text-warning" />
-                    <i className="bi bi-star-fill text-warning " />
-                    <i className="bi bi-star-fill text-warning " />
-                    <i className="bi bi-star-fill text-warning " />
-                    <i className="bi bi-star-fill text-warning " />
-                  </label>
-                </div>
-                {/* form check */}
-                <div className="form-check mb-2">
-                  {/* input */}
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    defaultValue
-                    id="ratingFour"
-                    defaultChecked
-                  />
-                  <label className="form-check-label" htmlFor="ratingFour">
-                    <i className="bi bi-star-fill text-warning" />
-                    <i className="bi bi-star-fill text-warning " />
-                    <i className="bi bi-star-fill text-warning " />
-                    <i className="bi bi-star-fill text-warning " />
-                    <i className="bi bi-star text-warning" />
-                  </label>
-                </div>
-                {/* form check */}
-                <div className="form-check mb-2">
-                  {/* input */}
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    defaultValue
-                    id="ratingThree"
-                  />
-                  <label className="form-check-label" htmlFor="ratingThree">
-                    <i className="bi bi-star-fill text-warning" />
-                    <i className="bi bi-star-fill text-warning " />
-                    <i className="bi bi-star-fill text-warning " />
-                    <i className="bi bi-star text-warning" />
-                    <i className="bi bi-star text-warning" />
-                  </label>
-                </div>
-                {/* form check */}
-                <div className="form-check mb-2">
-                  {/* input */}
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    defaultValue
-                    id="ratingTwo"
-                  />
-                  <label className="form-check-label" htmlFor="ratingTwo">
-                    <i className="bi bi-star-fill text-warning" />
-                    <i className="bi bi-star-fill text-warning" />
-                    <i className="bi bi-star text-warning" />
-                    <i className="bi bi-star text-warning" />
-                    <i className="bi bi-star text-warning" />
-                  </label>
-                </div>
-                {/* form check */}
-                <div className="form-check mb-2">
-                  {/* input */}
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    defaultValue
-                    id="ratingOne"
-                  />
-                  <label className="form-check-label" htmlFor="ratingOne">
-                    <i className="bi bi-star-fill text-warning" />
-                    <i className="bi bi-star text-warning" />
-                    <i className="bi bi-star text-warning" />
-                    <i className="bi bi-star text-warning" />
-                    <i className="bi bi-star text-warning" />
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div className="py-4">
-              {/* Banner Design */}
-              {/* Banner Content */}
-              <div className="position-absolute p-5 py-8">
-                <h3 className="mb-0">Fresh Fruits </h3>
-                <p>Get Upto 25% Off</p>
-                <Link to="#" className="btn btn-dark">
-                  Shop Now
-                  <i className="feather-icon icon-arrow-right ms-1" />
-                </Link>
-              </div>
-              {/* Banner Content */}
-              {/* Banner Image */}
-              {/* img */}
-              <img
-                src={assortment}
-                alt="assortment"
-                className="img-fluid rounded-3"
-              />
-              {/* Banner Image */}
-            </div>
-            {/* Banner Design */}
+
+            <h5 className="mb-3">Bo'limlar</h5>
+            {dropdownData.map((dropdown, index) => (
+              <ul className="nav flex-column" key={index}>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link"
+                    to="#"
+                    onClick={() => toggleDropdown(index)}
+                    aria-expanded={openDropdowns.includes(index) ? "true" : "false"}
+                    aria-controls={`categoryFlush${index + 1}`}
+                  >
+                    {dropdown.title} <i className="fa fa-chevron-down" />
+                  </Link>
+
+                  <div
+                    className={`collapse ${openDropdowns.includes(index) ? "show" : ""}`}
+                    id={`categoryFlush${index + 1}`}
+                  >
+                    <div>
+                      <ul className="nav flex-column ms-3">
+                        {dropdown.items.map((item, itemIndex) => (
+                          <li className="nav-item" key={itemIndex}>
+                            <Link
+                              className={`nav-link ${selectedSubcategory === item ? "fw-bold text-primary" : ""}`}
+                              to="#"
+                              onClick={() => {
+                                if (item !== "No subcategories available") {
+                                  setSelectedSubcategory(item);
+                                  setSearchTerm(""); // clear search when selecting subcategory
+                                  setCurrentPage(1);
+                                }
+                              }}
+                            >
+                              {item}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            ))}
           </div>
-        </div>
-        {/* Cards Column */}
-        <div className="col-lg-9 col-md-8">
-          {/* card */}
-          <div className="card mb-4 bg-light border-0">
-            {/* card body */}
-            <div className=" card-body p-9">
-              <h1 className="mb-0">Snacks &amp; Munchies</h1>
+
+          {/* Main content */}
+          <div className="col-lg-9 col-md-8">
+            {/* Title card */}
+            <div className="card mb-4 bg-light border-0">
+              <div className="card-body p-9">
+                <h1 className="mb-0">{selectedSubcategory ?? "Barcha Mahsulotlar"}</h1>
+              </div>
             </div>
-          </div>
-          {/* list icon */}
-          <div className="d-md-flex justify-content-between align-items-center">
-            <div>
-              <p className="mb-3 mb-md-0">
-                {" "}
-                <span className="text-dark">24 </span> Products found{" "}
-              </p>
-            </div>
-            {/* icon */}
-            <div className="d-flex justify-content-between align-items-center">
-              <Link to="/ShopListCol" className="text-muted me-3">
-                <i className="bi bi-list-ul" />
-              </Link>
-              <Link to="/ShopGridCol3" className=" me-3 active">
-                <i className="bi bi-grid" />
-              </Link>
-              <Link to="/Shop" className="me-3 text-muted">
-                <i className="bi bi-grid-3x3-gap" />
-              </Link>
-              <div className="me-2">
-                {/* select option */}
+
+            {/* Controls */}
+            <div className="d-md-flex justify-content-between align-items-center mb-3">
+              <div>
+                <p className="mb-0">
+                  <span className="text-dark">{filteredProducts.length}</span> Products found
+                </p>
+              </div>
+
+              <div className="d-flex align-items-center gap-3">
                 <select
                   className="form-select"
-                  aria-label="Default select example"
+                  aria-label="Page size"
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
                 >
-                  <option selected>Show: 50</option>
+                  <option value={50}>Show: 50</option>
                   <option value={10}>10</option>
                   <option value={20}>20</option>
                   <option value={30}>30</option>
                 </select>
-              </div>
-              <div>
-                {/* select option */}
+
                 <select
                   className="form-select"
-                  aria-label="Default select example"
+                  aria-label="Sort by price"
+                  value={sortOrder}
+                  onChange={(e) => {
+                    setSortOrder(e.target.value);
+                    setCurrentPage(1);
+                  }}
                 >
-                  <option selected>Sort by: Featured</option>
+                  <option value="Featured">Sort by: Featured</option>
                   <option value="Low to High">Price: Low to High</option>
-                  <option value="High to Low"> Price: High to Low</option>
-                  <option value="Release Date"> Release Date</option>
-                  <option value="Avg. Rating"> Avg. Rating</option>
+                  <option value="High to Low">Price: High to Low</option>
                 </select>
               </div>
             </div>
-          </div>
-          {/* row */}
-          <div className="row g-4 row-cols-xl-4 row-cols-lg-3 row-cols-2 row-cols-md-2 mt-2">
-            {/* col */}
-            <div className="col">
-              {/* card */}
-              <div className="card card-product">
-                <div className="card-body">
-                  {/* badge */}
-                  <div className="text-center position-relative ">
-                    <div className=" position-absolute top-0 start-0">
-                      <span className="badge bg-danger">Sale</span>
-                    </div>
-                    <Link to="#!">
-                      {/* img */}
-                      <img
-                        src={product1}
-                        alt="Grocery Ecommerce Template"
-                        className="mb-3 img-fluid"
-                      />
-                    </Link>
-                    {/* action btn */}
-                    <div className="card-product-action">
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                      >
-                        <i
-                          className="bi bi-eye"
-                          data-bs-toggle="tooltip"
-                          data-bs-html="true"
-                          title="Quick View"
-                        />
-                      </Link>
-                      <Link
-                        to="shop-wishlist.html"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Wishlist"
-                      >
-                        <i className="bi bi-heart" />
-                      </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Compare"
-                      >
-                        <i className="bi bi-arrow-left-right" />
-                      </Link>
-                    </div>
-                  </div>
-                  {/* heading */}
-                  <div className="text-small mb-1">
-                    <Link to="#!" className="text-decoration-none text-muted">
-                      <small>Snack &amp; Munchies</small>
-                    </Link>
-                  </div>
-                  <h2 className="fs-6">
-                    <Link to="#!" className="text-inherit text-decoration-none">
-                      Haldiram's Sev Bhujia
-                    </Link>
-                  </h2>
-                  <div>
-                    {/* rating */}
-                    <small className="text-warning">
-                      {" "}
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-half" />
-                    </small>{" "}
-                    <span className="text-muted small">4.5(149)</span>
-                  </div>
-                  {/* price */}
-                  <div className="d-flex justify-content-between align-items-center mt-3">
-                    <div>
-                      <span className="text-dark">$18</span>{" "}
-                      <span className="text-decoration-line-through text-muted">
-                        $24
-                      </span>
-                    </div>
-                    {/* btn */}
-                    <div>
-                      <Link to="#!" className="btn btn-primary btn-sm">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width={16}
-                          height={16}
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-plus"
+
+            {/* Products grid */}
+            <div className="row g-4 row-cols-xl-4 row-cols-lg-3 row-cols-2 row-cols-md-2 mt-2">
+              {paginatedProducts.map((product, index) => (
+                <div className="col" key={index}>
+                  <div className="card card-product">
+                    <div className="card-body">
+                      <div className="text-center position-relative">
+                        <div className="position-absolute top-0 start-0">
+                          <span className="badge bg-success">{product.discount}%</span>
+                        </div>
+                        <Link
+                          to="#!"
+                          onClick={() => setSelectedProduct(product)}
+                          data-bs-toggle="modal"
+                          data-bs-target="#quickViewModal"
                         >
-                          <line x1={12} y1={5} x2={12} y2={19} />
-                          <line x1={5} y1={12} x2={19} y2={12} />
-                        </svg>{" "}
-                        Add
-                      </Link>
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className="mb-3 img-fluid"
+
+                            style={{
+                                minHeight: "150px",
+                                maxHeight: "150px",
+                                width: "100%",
+                                objectFit: "cover",
+                              }}
+                          />
+                        </Link>
+                        <div className="card-product-action">
+                          <Link
+                            to="#!"
+                            className="btn-action"
+                            onClick={() => setSelectedProduct(product)}
+                            data-bs-toggle="modal"
+                            data-bs-target="#quickViewModal"
+                          >
+                            <i
+                              className="bi bi-eye"
+                              data-bs-toggle="tooltip"
+                              data-bs-html="true"
+                              title="Quick View"
+                            />
+                          </Link>
+                        </div>
+                      </div>
+
+                      <div className="text-small mb-1">
+                        <Link to="#!" className="text-decoration-none text-muted">
+                          <small>{product.category}</small>
+                        </Link>
+                      </div>
+                      <h2 className="fs-6">
+                        <Link to="#!" className="text-inherit text-decoration-none">
+                          {product.name}
+                        </Link>
+                      </h2>
+
+                      <div className="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                          <span className="text-dark">
+                            {(product.cost - (product.cost * (product.discount / 100))).toFixed(2)} so'm
+                          </span>
+                          <br />
+                          <span className="text-decoration-line-through text-muted">
+                            {product.cost} so'm
+                          </span>
+                        </div>
+
+                        <div>
+                          <Link to="#!" className="btn btn-primary btn-sm" onClick={() => {
+                            addToCart(product);
+                            handleAddClick(product.name);
+                          }}>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width={16}
+                              height={16}
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="feather feather-plus"
+                            >
+                              <line x1={12} y1={5} x2={12} y2={19} />
+                              <line x1={5} y1={12} x2={19} y2={12} />
+                            </svg>{" "}
+                            Savat
+                          </Link>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
-            {/* col */}
-            <div className="col">
-              {/* card */}
-              <div className="card card-product">
-                <div className="card-body">
-                  {/* badge */}
-                  <div className="text-center position-relative">
-                    <div className=" position-absolute top-0 start-0">
-                      <span className="badge bg-success">14%</span>
-                    </div>
-                    <Link to="#!">
-                      {/* img */}
-                      <img
-                        src={product2}
-                        alt="Grocery Ecommerce Template"
-                        className="mb-3 img-fluid"
-                      />
-                    </Link>
-                    {/* action btn */}
-                    <div className="card-product-action">
+
+            {/* Pagination */}
+            <div className="row mt-4">
+              <div className="col">
+                <nav>
+                  <ul className="pagination justify-content-center">
+                    <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
                       <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
+                        className="page-link mx-1 rounded-3"
+                        to="#"
+                        onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
+                        aria-label="Previous"
                       >
-                        <i
-                          className="bi bi-eye"
-                          data-bs-toggle="tooltip"
-                          data-bs-html="true"
-                          title="Quick View"
-                        />
+                        <i className="fa fa-chevron-left" />
                       </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Wishlist"
+                    </li>
+
+                    {[...Array(totalPages).keys()].map(page => (
+                      <li
+                        key={page}
+                        className={`page-item ${currentPage === page + 1 ? "active" : ""}`}
                       >
-                        <i className="bi bi-heart" />
-                      </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Compare"
-                      >
-                        <i className="bi bi-arrow-left-right" />
-                      </Link>
-                    </div>
-                  </div>
-                  {/* heading */}
-                  <div className="text-small mb-1">
-                    <Link to="#!" className="text-decoration-none text-muted">
-                      <small>Bakery &amp; Biscuits</small>
-                    </Link>
-                  </div>
-                  <h2 className="fs-6">
-                    <Link to="#!" className="text-inherit text-decoration-none">
-                      NutriChoice Digestive{" "}
-                    </Link>
-                  </h2>
-                  <div className="text-warning">
-                    {/* rating */}
-                    <small>
-                      {" "}
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-half" />
-                    </small>{" "}
-                    <span className="text-muted small">4.5 (25)</span>
-                  </div>
-                  {/* price */}
-                  <div className="d-flex justify-content-between align-items-center mt-3">
-                    <div>
-                      <span className="text-dark">$24</span>
-                    </div>
-                    {/* btn */}
-                    <div>
-                      <Link to="#!" className="btn btn-primary btn-sm">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width={16}
-                          height={16}
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-plus"
+                        <Link
+                          className="page-link mx-1 rounded-3"
+                          to="#"
+                          onClick={() => setCurrentPage(page + 1)}
                         >
-                          <line x1={12} y1={5} x2={12} y2={19} />
-                          <line x1={5} y1={12} x2={19} y2={12} />
-                        </svg>{" "}
-                        Add
+                          {page + 1}
+                        </Link>
+                      </li>
+                    ))}
+
+                    <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
+                      <Link
+                        className="page-link mx-1 rounded-3"
+                        to="#"
+                        onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)}
+                        aria-label="Next"
+                      >
+                        <i className="fa fa-chevron-right" />
                       </Link>
-                    </div>
-                  </div>
-                </div>
+                    </li>
+                  </ul>
+                </nav>
               </div>
-            </div>
-            {/* col */}
-            <div className="col">
-              {/* card */}
-              <div className="card card-product">
-                <div className="card-body">
-                  {/* badge */}
-                  <div className="text-center position-relative">
-                    <Link to="#!">
-                      <img
-                        src={product3}
-                        alt="Grocery Ecommerce Template"
-                        className="mb-3 img-fluid"
-                      />
-                    </Link>
-                    {/* action btn */}
-                    <div className="card-product-action">
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                      >
-                        <i
-                          className="bi bi-eye"
-                          data-bs-toggle="tooltip"
-                          data-bs-html="true"
-                          title="Quick View"
-                        />
-                      </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Wishlist"
-                      >
-                        <i className="bi bi-heart" />
-                      </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Compare"
-                      >
-                        <i className="bi bi-arrow-left-right" />
-                      </Link>
-                    </div>
-                  </div>
-                  {/* heading */}
-                  <div className="text-small mb-1">
-                    <Link to="#!" className="text-decoration-none text-muted">
-                      <small>Bakery &amp; Biscuits</small>
-                    </Link>
-                  </div>
-                  <h2 className="fs-6">
-                    <Link to="#!" className="text-inherit text-decoration-none">
-                      Cadbury 5 Star Chocolate
-                    </Link>
-                  </h2>
-                  <div className="text-warning">
-                    {/* rating */}
-                    <small>
-                      {" "}
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                    </small>{" "}
-                    <span className="text-muted small">5 (469)</span>
-                  </div>
-                  {/* price */}
-                  <div className="d-flex justify-content-between align-items-center mt-3">
-                    <div>
-                      <span className="text-dark">$32</span>{" "}
-                      <span className="text-decoration-line-through text-muted">
-                        $35
-                      </span>
-                    </div>
-                    {/* btn */}
-                    <div>
-                      <Link to="#!" className="btn btn-primary btn-sm">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width={16}
-                          height={16}
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-plus"
-                        >
-                          <line x1={12} y1={5} x2={12} y2={19} />
-                          <line x1={5} y1={12} x2={19} y2={12} />
-                        </svg>{" "}
-                        Add
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* col */}
-            <div className="col">
-              {/* card */}
-              <div className="card card-product">
-                <div className="card-body">
-                  {/* badge */}
-                  <div className="text-center position-relative">
-                    <div className=" position-absolute top-0">
-                      <span className="badge bg-danger">hot</span>
-                    </div>
-                    <Link to="#!">
-                      {/* img */}
-                      <img
-                        src={product4}
-                        alt="Grocery Ecommerce Template"
-                        className="mb-3 img-fluid"
-                      />
-                    </Link>
-                    {/* action btn */}
-                    <div className="card-product-action">
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                      >
-                        <i
-                          className="bi bi-eye"
-                          data-bs-toggle="tooltip"
-                          data-bs-html="true"
-                          title="Quick View"
-                        />
-                      </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Wishlist"
-                      >
-                        <i className="bi bi-heart" />
-                      </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Compare"
-                      >
-                        <i className="bi bi-arrow-left-right" />
-                      </Link>
-                    </div>
-                  </div>
-                  {/* heading */}
-                  <div className="text-small mb-1">
-                    <Link to="#!" className="text-decoration-none text-muted">
-                      <small>Snack &amp; Munchies</small>
-                    </Link>
-                  </div>
-                  <h2 className="fs-6">
-                    <Link to="#!" className="text-inherit text-decoration-none">
-                      Onion Flavour Potato
-                    </Link>
-                  </h2>
-                  <div className="text-warning">
-                    {/* rating */}
-                    <small>
-                      {" "}
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-half" />
-                      <i className="bi bi-star" />
-                    </small>{" "}
-                    <span className="text-muted small">3.5 (456)</span>
-                  </div>
-                  {/* price */}
-                  <div className="d-flex justify-content-between align-items-center mt-3">
-                    <div>
-                      <span className="text-dark">$3</span>{" "}
-                      <span className="text-decoration-line-through text-muted">
-                        $5
-                      </span>
-                    </div>
-                    {/* btn */}
-                    <div>
-                      <Link to="#!" className="btn btn-primary btn-sm">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width={16}
-                          height={16}
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-plus"
-                        >
-                          <line x1={12} y1={5} x2={12} y2={19} />
-                          <line x1={5} y1={12} x2={19} y2={12} />
-                        </svg>{" "}
-                        Add
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* col */}
-            <div className="col">
-              {/* card */}
-              <div className="card card-product">
-                <div className="card-body">
-                  {/* badge */}
-                  <div className="text-center position-relative">
-                    <Link to="#!">
-                      <img
-                        src={product5}
-                        alt="Grocery Ecommerce Template"
-                        className="mb-3 img-fluid"
-                      />
-                    </Link>
-                    {/* action btn */}
-                    <div className="card-product-action">
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                      >
-                        <i
-                          className="bi bi-eye"
-                          data-bs-toggle="tooltip"
-                          data-bs-html="true"
-                          title="Quick View"
-                        />
-                      </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Wishlist"
-                      >
-                        <i className="bi bi-heart" />
-                      </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Compare"
-                      >
-                        <i className="bi bi-arrow-left-right" />
-                      </Link>
-                    </div>
-                  </div>
-                  {/* heading */}
-                  <div className="text-small mb-1">
-                    <Link to="#!" className="text-decoration-none text-muted">
-                      <small>Instant Food</small>
-                    </Link>
-                  </div>
-                  <h2 className="fs-6">
-                    <Link to="#!" className="text-inherit text-decoration-none">
-                      Salted Instant Popcorn{" "}
-                    </Link>
-                  </h2>
-                  <div className="text-warning">
-                    {/* rating */}
-                    <small>
-                      {" "}
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-half" />
-                    </small>{" "}
-                    <span className="text-muted small">4.5 (39)</span>
-                  </div>
-                  <div className="d-flex justify-content-between mt-4">
-                    <div>
-                      <span className="text-dark">$13</span>{" "}
-                      <span className="text-decoration-line-through text-muted">
-                        $18
-                      </span>
-                    </div>
-                    {/* btn */}
-                    <div>
-                      <Link to="#!" className="btn btn-primary btn-sm">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width={16}
-                          height={16}
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-plus"
-                        >
-                          <line x1={12} y1={5} x2={12} y2={19} />
-                          <line x1={5} y1={12} x2={19} y2={12} />
-                        </svg>{" "}
-                        Add
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* col */}
-            <div className="col">
-              {/* card */}
-              <div className="card card-product">
-                <div className="card-body">
-                  {/* badge */}
-                  <div className="text-center position-relative ">
-                    <div className=" position-absolute top-0">
-                      <span className="badge bg-danger">Sale</span>
-                    </div>
-                    <Link to="#!">
-                      {/* img */}
-                      <img
-                        src={product6}
-                        alt="Grocery Ecommerce Template"
-                        className="mb-3 img-fluid"
-                      />
-                    </Link>
-                    {/* action btn */}
-                    <div className="card-product-action">
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                      >
-                        <i
-                          className="bi bi-eye"
-                          data-bs-toggle="tooltip"
-                          data-bs-html="true"
-                          title="Quick View"
-                        />
-                      </Link>
-                      <Link
-                        to="shop-wishlist.html"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Wishlist"
-                      >
-                        <i className="bi bi-heart" />
-                      </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Compare"
-                      >
-                        <i className="bi bi-arrow-left-right" />
-                      </Link>
-                    </div>
-                  </div>
-                  {/* heading */}
-                  <div className="text-small mb-1">
-                    <Link to="#!" className="text-decoration-none text-muted">
-                      <small>Dairy, Bread &amp; Eggs</small>
-                    </Link>
-                  </div>
-                  <h2 className="fs-6">
-                    <Link to="#!" className="text-inherit text-decoration-none">
-                      Blueberry Greek Yogurt
-                    </Link>
-                  </h2>
-                  <div>
-                    {/* rating */}
-                    <small className="text-warning">
-                      {" "}
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-half" />
-                    </small>{" "}
-                    <span className="text-muted small">4.5 (189)</span>
-                  </div>
-                  {/* price */}
-                  <div className="d-flex justify-content-between align-items-center mt-3">
-                    <div>
-                      <span className="text-dark">$18</span>{" "}
-                      <span className="text-decoration-line-through text-muted">
-                        $24
-                      </span>
-                    </div>
-                    {/* btn */}
-                    <div>
-                      <Link to="#!" className="btn btn-primary btn-sm">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width={16}
-                          height={16}
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-plus"
-                        >
-                          <line x1={12} y1={5} x2={12} y2={19} />
-                          <line x1={5} y1={12} x2={19} y2={12} />
-                        </svg>{" "}
-                        Add
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* col */}
-            <div className="col">
-              {/* card */}
-              <div className="card card-product">
-                <div className="card-body">
-                  {/* badge */}
-                  <div className="text-center position-relative">
-                    <Link to="#!">
-                      <img
-                        src={product7}
-                        alt="Grocery Ecommerce Template"
-                        className="mb-3 img-fluid"
-                      />
-                    </Link>
-                    {/* action btn */}
-                    <div className="card-product-action">
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                      >
-                        <i
-                          className="bi bi-eye"
-                          data-bs-toggle="tooltip"
-                          data-bs-html="true"
-                          title="Quick View"
-                        />
-                      </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Wishlist"
-                      >
-                        <i className="bi bi-heart" />
-                      </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Compare"
-                      >
-                        <i className="bi bi-arrow-left-right" />
-                      </Link>
-                    </div>
-                  </div>
-                  {/* heading */}
-                  <div className="text-small mb-1">
-                    <Link to="#!" className="text-decoration-none text-muted">
-                      <small>Dairy, Bread &amp; Eggs</small>
-                    </Link>
-                  </div>
-                  <h2 className="fs-6">
-                    <Link to="#!" className="text-inherit text-decoration-none">
-                      Britannia Cheese Slices
-                    </Link>
-                  </h2>
-                  <div className="text-warning">
-                    {/* rating */}
-                    <small>
-                      {" "}
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                    </small>{" "}
-                    <span className="text-muted small">5 (345)</span>
-                  </div>
-                  {/* price */}
-                  <div className="d-flex justify-content-between align-items-center mt-3">
-                    <div>
-                      <span className="text-dark">$24</span>
-                    </div>
-                    {/* btn */}
-                    <div>
-                      <Link to="#!" className="btn btn-primary btn-sm">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width={16}
-                          height={16}
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-plus"
-                        >
-                          <line x1={12} y1={5} x2={12} y2={19} />
-                          <line x1={5} y1={12} x2={19} y2={12} />
-                        </svg>{" "}
-                        Add
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* col */}
-            <div className="col">
-              {/* card */}
-              <div className="card card-product">
-                <div className="card-body">
-                  {/* badge */}
-                  <div className="text-center position-relative">
-                    <Link to="#!">
-                      <img
-                        src={product8}
-                        alt="Grocery Ecommerce Template"
-                        className="mb-3 img-fluid"
-                      />
-                    </Link>
-                    {/* action btn */}
-                    <div className="card-product-action">
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                      >
-                        <i
-                          className="bi bi-eye"
-                          data-bs-toggle="tooltip"
-                          data-bs-html="true"
-                          title="Quick View"
-                        />
-                      </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Wishlist"
-                      >
-                        <i className="bi bi-heart" />
-                      </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Compare"
-                      >
-                        <i className="bi bi-arrow-left-right" />
-                      </Link>
-                    </div>
-                  </div>
-                  {/* heading */}
-                  <div className="text-small mb-1">
-                    <Link to="#!" className="text-decoration-none text-muted">
-                      <small>Instant Food</small>
-                    </Link>
-                  </div>
-                  <h2 className="fs-6">
-                    <Link to="#!" className="text-inherit text-decoration-none">
-                      Kellogg's Original Cereals
-                    </Link>
-                  </h2>
-                  <div className="text-warning">
-                    {/* rating */}
-                    <small>
-                      {" "}
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-half" />
-                    </small>{" "}
-                    <span className="text-muted small">4 (90)</span>
-                  </div>
-                  {/* price */}
-                  <div className="d-flex justify-content-between align-items-center mt-3">
-                    <div>
-                      <span className="text-dark">$32</span>{" "}
-                      <span className="text-decoration-line-through text-muted">
-                        $35
-                      </span>
-                    </div>
-                    {/* btn */}
-                    <div>
-                      <Link to="#!" className="btn btn-primary btn-sm">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width={16}
-                          height={16}
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-plus"
-                        >
-                          <line x1={12} y1={5} x2={12} y2={19} />
-                          <line x1={5} y1={12} x2={19} y2={12} />
-                        </svg>{" "}
-                        Add
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* col */}
-            <div className="col">
-              {/* card */}
-              <div className="card card-product">
-                <div className="card-body">
-                  {/* badge */}
-                  <div className="text-center position-relative">
-                    <Link to="#!">
-                      <img
-                        src={product9}
-                        alt="Grocery Ecommerce Template"
-                        className="mb-3 img-fluid"
-                      />
-                    </Link>
-                    {/* action btn */}
-                    <div className="card-product-action">
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                      >
-                        <i
-                          className="bi bi-eye"
-                          data-bs-toggle="tooltip"
-                          data-bs-html="true"
-                          title="Quick View"
-                        />
-                      </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Wishlist"
-                      >
-                        <i className="bi bi-heart" />
-                      </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Compare"
-                      >
-                        <i className="bi bi-arrow-left-right" />
-                      </Link>
-                    </div>
-                  </div>
-                  {/* heading */}
-                  <div className="text-small mb-1">
-                    <Link to="#!" className="text-decoration-none text-muted">
-                      <small>Snack &amp; Munchies</small>
-                    </Link>
-                  </div>
-                  <h2 className="fs-6">
-                    <Link to="#!" className="text-inherit text-decoration-none">
-                      Slurrp Millet Chocolate{" "}
-                    </Link>
-                  </h2>
-                  <div className="text-warning">
-                    {/* rating */}
-                    <small>
-                      {" "}
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-half" />
-                    </small>{" "}
-                    <span className="text-muted small">4.5 (67)</span>
-                  </div>
-                  {/* price */}
-                  <div className="d-flex justify-content-between align-items-center mt-3">
-                    <div>
-                      <span className="text-dark">$3</span>{" "}
-                      <span className="text-decoration-line-through text-muted">
-                        $5
-                      </span>
-                    </div>
-                    {/* btn */}
-                    <div>
-                      <Link to="#!" className="btn btn-primary btn-sm">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width={16}
-                          height={16}
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-plus"
-                        >
-                          <line x1={12} y1={5} x2={12} y2={19} />
-                          <line x1={5} y1={12} x2={19} y2={12} />
-                        </svg>{" "}
-                        Add
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* col */}
-            <div className="col">
-              {/* card */}
-              <div className="card card-product">
-                <div className="card-body">
-                  {/* badge */}
-                  <div className="text-center position-relative">
-                    <Link to="#!">
-                      <img
-                        src={product10}
-                        alt="Grocery Ecommerce Template"
-                        className="mb-3 img-fluid"
-                      />
-                    </Link>
-                    {/* action btn */}
-                    <div className="card-product-action">
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                      >
-                        <i
-                          className="bi bi-eye"
-                          data-bs-toggle="tooltip"
-                          data-bs-html="true"
-                          title="Quick View"
-                        />
-                      </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Wishlist"
-                      >
-                        <i className="bi bi-heart" />
-                      </Link>
-                      <Link
-                        to="#!"
-                        className="btn-action"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        title="Compare"
-                      >
-                        <i className="bi bi-arrow-left-right" />
-                      </Link>
-                    </div>
-                  </div>
-                  {/* heading */}
-                  <div className="text-small mb-1">
-                    <Link to="#!" className="text-decoration-none text-muted">
-                      <small>Dairy, Bread &amp; Eggs</small>
-                    </Link>
-                  </div>
-                  <h2 className="fs-6">
-                    <Link to="#!" className="text-inherit text-decoration-none">
-                      Amul Butter - 500 g
-                    </Link>
-                  </h2>
-                  <div className="text-warning">
-                    {/* rating */}
-                    <small>
-                      {" "}
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-fill" />
-                      <i className="bi bi-star-half" />
-                      <i className="bi bi-star" />
-                    </small>{" "}
-                    <span className="text-muted small">3.5 (89)</span>
-                  </div>
-                  <div className="d-flex justify-content-between mt-4">
-                    <div>
-                      <span className="text-dark">$13</span>{" "}
-                      <span className="text-decoration-line-through text-muted">
-                        $18
-                      </span>
-                    </div>
-                    {/* btn */}
-                    <div>
-                      <Link to="#!" className="btn btn-primary btn-sm">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width={16}
-                          height={16}
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-plus"
-                        >
-                          <line x1={12} y1={5} x2={12} y2={19} />
-                          <line x1={5} y1={12} x2={19} y2={12} />
-                        </svg>{" "}
-                        Add
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="row mt-8">
-            <div className="col">
-              {/* nav */}
-              <nav>
-                <ul className="pagination">
-                  <li className="page-item disabled">
-                    <Link
-                      className="page-link  mx-1 rounded-3 "
-                      to="#"
-                      aria-label="Previous"
-                    >
-                      <i className="fa fa-chevron-left" />
-                    </Link>
-                  </li>
-                  <li className="page-item ">
-                    <Link className="page-link  mx-1 rounded-3 active" to="#">
-                      1
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link mx-1 rounded-3 text-body" to="#">
-                      2
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link mx-1 rounded-3 text-body" to="#">
-                      ...
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link mx-1 rounded-3 text-body" to="#">
-                      12
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link
-                      className="page-link mx-1 rounded-3 text-body"
-                      to="#"
-                      aria-label="Next"
-                    >
-                      <i className="fa fa-chevron-right" />
-                    </Link>
-                  </li>
-                </ul>
-              </nav>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Quick View Modal */}
+      <div
+        className="modal fade"
+        id="quickViewModal"
+        tabIndex="-1"
+        aria-labelledby="quickViewModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-lg modal-dialog-centered">
+          <div className="modal-content">
+            {selectedProduct && (
+              <>
+                <div className="modal-header">
+                  <h5 className="modal-title" id="quickViewModalLabel">
+                    {selectedProduct.name}
+                  </h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    onClick={() => setSelectedProduct(null)}
+                  ></button>
+                </div>
+                <div className="modal-body row">
+                  <div className="col-md-6">
+                    <img
+                      src={selectedProduct.image}
+                      alt={selectedProduct.name}
+                      className="img-fluid"
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <p>
+                      {/* Uncomment if category object available */}
+                      {/* <strong>Bo'lim:</strong> {selectedProduct.category.name} */}
+                    </p>
+                    <p>
+                      <strong>Tavsif:</strong>{" "}
+                      {selectedProduct.description || "No description available."}
+                    </p>
+                    <p>
+                      <strong>Narx:</strong>{" "}
+                      {(selectedProduct.cost - selectedProduct.cost * (selectedProduct.discount / 100)).toFixed(2)} so'm{" "}
+                      <span className="text-muted text-decoration-line-through">
+                        {selectedProduct.cost} so'm
+                      </span>
+                    </p>
+                    <p>
+                      <strong>Chegirma:</strong> {selectedProduct.discount}%
+                    </p>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => {
+                        addToCart(selectedProduct);
+                      }}
+                    >
+                      Savatchaga qo'shish
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
-    </>
-)}
-</div>
   );
 }
-
-const dropdownData = [
-  {
-    title: "Dairy, Bread & Eggs",
-    items: [
-      "Milk",
-      "Milk Drinks",
-      "Curd & Yogurt",
-      "Eggs",
-      "Bread",
-      "Buns & Bakery",
-      "Butter & More",
-      "Cheese",
-      "Paneer & Tofu",
-      "Cream & Whitener",
-      "Condensed Milk",
-      "Vegan Drinks",
-    ],
-  },
-  {
-    title: "Snacks & Munchies",
-    items: [
-      "Chips & Crisps",
-      "Nachos",
-      "Popcorn",
-      "Bhujia & Mixtures",
-      "Namkeen Snacks",
-      "Healthy Snacks",
-      "Cakes & Rolls",
-      "Energy Bars",
-      "Papad & Fryums",
-      "Rusks & Wafers",
-    ],
-  },
-  {
-    title: "Fruits & Vegetables",
-    items: [
-      "Fresh Vegetables",
-      "Herbs & Seasonings",
-      "Fresh Fruits",
-      "Organic Fruits & Vegetables",
-      "Cuts & Sprouts",
-      "Exotic Fruits & Veggies",
-      "Flower Bouquets, Bunches",
-    ],
-  },
-  {
-    title: "Cold Drinks & Juices" ,
-    items: [
-      "Soft Drinks",
-      "Fruit Juices",
-      "Coldpress",
-      "Energy Drinks",
-      "Water & Ice Cubes",
-      "Soda & Mixers",
-      "Concentrates & Syrups",
-      "Detox & Energy Drinks",
-      "Juice Collection",
-    ],
-  },
-];
-
 
 export default Dropdown;

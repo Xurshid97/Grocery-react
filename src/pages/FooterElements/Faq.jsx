@@ -3,34 +3,34 @@ import React, { useState } from "react";
 const FAQ = () => {
   const faqData = [
     {
-      question: "How do I add items to my cart?",
+      question: "Qanday mahsulotlarni buyurtma berishim mumkin?",
       answer:
-        "Browse the products and click on the 'Add to Cart' button. You can view your cart anytime by clicking on the cart icon.",
+        "Mahsulotlarni ko'rib chiqing va 'Savatchaga qo'shish' tugmasini bosing. Savatchangizni har qanday vaqtda savatcha belgisini bosish orqali ko'rishingiz mumkin.",
     },
     {
-      question: "Can I remove or update the quantity of items in my cart?",
+      question: "Savatchamdagi mahsulotlar miqdorini o'zgartirishim yoki olib tashlashim mumkinmi?",
       answer:
-        "Yes, go to the cart page. You'll find options to increase, decrease, or remove each item from the cart.",
+        "Ha, savatcha sahifasiga o'ting. Siz har bir mahsulotni oshirish, kamaytirish yoki olib tashlash imkoniyatlarini topasiz.",
     },
     {
-      question: "Do I need to create an account to order groceries?",
+      question: "Mahsulotlarni buyurtma berish uchun hisob yaratishim kerakmi?",
       answer:
-        "You can browse items without an account, but placing an order requires a quick sign-up or login to ensure delivery and order tracking.",
+        "Siz hisob yaratmasdan mahsulotlarni ko'rib chiqishingiz mumkin, lekin buyurtma berish uchun tezkor ro'yxatdan o'tish yoki tizimga kirish talab etiladi.",
     },
     {
-      question: "What payment methods are accepted?",
+      question: "Qanday to'lov usullari qabul qilinadi?",
       answer:
-        "We accept UPI, Credit/Debit Cards, Net Banking, and Cash on Delivery (COD) based on availability in your area.",
+        "Biz Kredit/Debet kartalari, Internet-bank va Naqd pul (COD) to'lovlarini qabul qilamiz, bu sizning hududingizda mavjudligiga qarab.",
     },
     {
-      question: "How do I track my order?",
+      question: "Buyurtmamni qanday kuzatishim mumkin?",
       answer:
-        "After placing your order, go to your profile > 'My Orders' to see live updates and order history.",
+        "Buyurtmangizni joylashtirgandan so'ng, profilga o'ting > 'Mening buyurtmalarim' bo'limiga kirib, jonli yangilanishlar va buyurtma tarixini ko'rishingiz mumkin.",
     },
     {
-      question: "Is there a minimum order value for free delivery?",
+      question: "Bepul yetkazib berish uchun minimal buyurtma qiymati bormi?",
       answer:
-        "Yes, orders above ₹499 qualify for free delivery. A small delivery charge applies for smaller orders.",
+        "Ha, 50 000 so'm dan yuqori buyurtmalar bepul yetkazib berish uchun mos keladi. Kichikroq buyurtmalar uchun kichik yetkazib berish haqiqati qo'llaniladi.",
     },
   ];
 
@@ -46,7 +46,7 @@ const FAQ = () => {
         <div className="col-md-12 mb-6">
           <div className="section-head text-center mt-8">
             <h1 className="h3style" style={{ color: "green" }} data-title="Frequently Asked Questions">
-              Frequently Asked Questions
+              Odatiy beriladigan savollar
             </h1>
             <div className="wt-separator bg-primarys"></div>
             <div className="wt-separator2 bg-primarys"></div>

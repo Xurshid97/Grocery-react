@@ -17513,6 +17513,11 @@ fieldset:disabled .btn {
 }
 .rounded-circle {
   border-radius: 50% !important;
+
+  width: 120px;          /* or any size you want */
+  height: 120px;         /* must match width for perfect circle */
+  object-fit: cover;     /* crop without distortion */
+  border-radius: 50%;
 }
 .rounded-pill {
   border-radius: var(--bs-border-radius-pill) !important;
@@ -28519,7 +28524,7 @@ li {
   border: 1px solid #000000;
 }
 
-/* 
+/*
 input[type="email"],
 
 textarea,
@@ -28848,7 +28853,7 @@ select {
 
 .nav-link.active-link {
   background-color: #001e2b;
-  color: #fff;  
+  color: #fff;
   border-radius: 10px;
 }
 
@@ -29175,7 +29180,7 @@ select {
   margin-left: 5px;
   display: inline-block;
   border-radius: 1px;
-  
+
 }
 .testimonials-one .owl-theme .owl-dots .owl-dot:hover span,
 .testimonials-one .owl-theme .owl-dots .owl-dot.active span {
@@ -29262,7 +29267,7 @@ select {
 .testimonials-one .client-img img {
   border-radius: 50%;
   margin: auto;
-  
+
 }
 
 .testimonials-one .quote-icon {
@@ -29317,7 +29322,7 @@ select {
 }
 
 /*----------------------------------------------------------------
-                  Start Section Testimonials 
+                  Start Section Testimonials
 ----------------------------------------------------------------*/
 
 .owl-carousel {
@@ -29396,7 +29401,7 @@ select {
   padding: 3px;
   background: #FFF;
   position: relative;
-  
+
 }
 .testimonials .author-details {
   float: left;
@@ -29410,7 +29415,7 @@ select {
   padding-top: 6px;
   line-height: 23px;
   margin-bottom: 2px;
-  
+
 }
 .testimonials .author-details span {
   font-size: 13px;
@@ -29434,7 +29439,7 @@ select {
 }
 .testimonials-two {
   background: #FFF !important;
-  
+
 }
 .testimonials-two .testmonail-box {
   background: #f5f5fb;
@@ -29894,7 +29899,7 @@ background-color: #f3f6ff;
     display: block;
     width: 20px;
     height: 20px;
-    padding: 5px; 
+    padding: 5px;
     cursor: pointer;
     color: #0aad0a;
     border: 0;

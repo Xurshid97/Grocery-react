@@ -3,15 +3,52 @@ import { Link } from "react-router-dom";
 import { MagnifyingGlass } from "react-loader-spinner";
 import ScrollToTop from "../ScrollToTop";
 
-const MyAcconutSetting = () => {
-  // loading
-  const [loaderStatus, setLoaderStatus] = useState(true);
-  useEffect(() => {
-    setTimeout(() => {
-      setLoaderStatus(false);
-    }, 1500);
-  }, []);
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import axiosInstance from "../../utils/axiosInstance";
+import { updateBasicInfo } from "../../redux_features/user/user_slicer";
+import AccountNavbar from "./AccountNavbar";
 
+const MyAcconutSetting = () => {
+    // get current page url name
+    const currentActive = "/MyAccountSetting";
+  const userInfo = useSelector((state) => state.user);
+  const [loaderStatus, setLoaderStatus] = useState(false);
+  const [userFormInfo, setUserFormInfo] = useState({
+    username: '',
+    raqam: '',
+  });
+
+    const dispatch = useDispatch();
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const response = await axiosInstance.get('/profile');
+            return response.data;
+        };
+      const getUserData = async () => {
+        // setLoaderStatus(true);
+        const data = await fetchUserData();
+
+        dispatch(updateBasicInfo(data));
+        setUserFormInfo({
+          username: data.username || '',
+          raqam: data.raqam || '',
+        });
+        setLoaderStatus(false);
+      };
+      getUserData();
+    }, []);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+        // Example: Send updated userFormInfo to the server
+            await axiosInstance.put('/profile/', userFormInfo);
+            dispatch(updateBasicInfo(userFormInfo));
+        } catch (error) {
+            console.error('Error saving user data:', error);
+        }
+    };
   return (
     <div>
        <>
@@ -24,84 +61,8 @@ const MyAcconutSetting = () => {
             {/* container */}
             <div className="container">
               {/* row */}
-              <div className="row">
-                {/* col */}
-                <div className="col-12">
-                  <div className="p-6 d-flex justify-content-between align-items-center d-md-none">
-                    {/* heading */}
-                    <h3 className="fs-5 mb-0">Account Setting</h3>
-                    {/* btn */}
-                    <button
-                      className="btn btn-outline-gray-400 text-muted d-md-none"
-                      type="button"
-                      data-bs-toggle="offcanvas"
-                      data-bs-target="#offcanvasAccount"
-                      aria-controls="offcanvasAccount"
-                    >
-                      <i className="fas fa-bars"></i>
-                    </button>
-                  </div>
-                </div>
-                {/* col */}
-                <div className="col-lg-3 col-md-4 col-12 border-end  d-none d-md-block">
-                  <div className="pt-10 pe-lg-10">
-                    {/* nav item */}
-                    <ul className="nav flex-column nav-pills nav-pills-dark">
-                      <li className="nav-item">
-                        <Link
-                          className="nav-link "
-                          aria-current="page"
-                          to="/MyAccountOrder"
-                        >
-                          <i className="fas fa-shopping-bag me-2" />
-                          Your Orders
-                        </Link>
-                      </li>
-                      {/* nav item */}
-                      <li className="nav-item">
-                        <Link
-                          className="nav-link active"
-                          to="/MyAccountSetting"
-                        >
-                          <i className="fas fa-cog me-2" />
-                          Settings
-                        </Link>
-                      </li>
-                      {/* nav item */}
-                      <li className="nav-item">
-                        <Link className="nav-link" to="/MyAccountAddress">
-                          <i className="fas fa-map-marker-alt me-2" />
-                          Address
-                        </Link>
-                      </li>
-                      {/* nav item */}
-                      <li className="nav-item">
-                        <Link className="nav-link" to="/MyAcconutPaymentMethod">
-                          <i className="fas fa-credit-card me-2" />
-                          Payment Method
-                        </Link>
-                      </li>
-                      {/* nav item */}
-                      <li className="nav-item">
-                        <Link className="nav-link" to="/MyAcconutNotification">
-                          <i className="fas fa-bell me-2" />
-                          Notification
-                        </Link>
-                      </li>
-                      {/* nav item */}
-                      <li className="nav-item">
-                        <hr />
-                      </li>
-                      {/* nav item */}
-                      <li className="nav-item">
-                        <Link className="nav-link " to="/Grocery-react/">
-                          <i className="fas fa-sign-out-alt me-2" />
-                          Log out
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
+              <div className="row pt-10">
+                <AccountNavbar currentActive={currentActive} />
                 <div className="col-lg-9 col-md-8 col-12">
                   <div>
                     {loaderStatus ? (
@@ -123,49 +84,44 @@ const MyAcconutSetting = () => {
                         <div className="p-6 p-lg-10">
                           <div className="mb-6">
                             {/* heading */}
-                            <h2 className="mb-0">Account Setting</h2>
+                            <h2 className="mb-0">Profil Sozlamalari</h2>
                           </div>
                           <div>
                             {/* heading */}
-                            <h5 className="mb-4">Account details</h5>
+                            <h5 className="mb-4">Xush kelibsiz {userInfo.name}</h5>
                             <div className="row">
                               <div className="col-lg-5">
                                 {/* form */}
-                                <form>
-                                  {/* input */}
-                                  <div className="mb-3">
-                                    <label className="form-label">Name</label>
-                                    <input
-                                      type="text"
-                                      className="form-control"
-                                      placeholder="Nigam Mishra"
-                                    />
-                                  </div>
-                                  {/* input */}
-                                  <div className="mb-3">
-                                    <label className="form-label">Email</label>
-                                    <input
-                                      type="email"
-                                      className="form-control"
-                                      placeholder="example@gmail.com"
-                                    />
-                                  </div>
-                                  {/* input */}
-                                  <div className="mb-5">
-                                    <label className="form-label">Phone</label>
-                                    <input
-                                      type="text"
-                                      className="form-control"
-                                      placeholder="Phone number"
-                                    />
-                                  </div>
-                                  {/* button */}
-                                  <div className="mb-3">
-                                    <button className="btn btn-primary">
-                                      Save Details
-                                    </button>
-                                  </div>
-                                </form>
+                                <form onSubmit={handleSubmit}>
+                                    {/* Input: Name */}
+                                    <div className="mb-3">
+                                        <label className="form-label">Ism</label>
+                                        <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Ismingizni kiriting"
+                                        onChange={(e) => setUserFormInfo({ ...userFormInfo, username: e.target.value })}
+                                        value={userFormInfo.username || ''} // Fallback to empty string
+                                        />
+                                    </div>
+                                    {/* Input: Phone */}
+                                    <div className="mb-5">
+                                        <label className="form-label">Tel raqami</label>
+                                        <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Telefon raqamingizni kiriting"
+                                        onChange={(e) => setUserFormInfo({ ...userFormInfo, raqam: e.target.value })}
+                                        value={userFormInfo.raqam || ''} // Fallback to empty string
+                                        />
+                                    </div>
+                                    {/* Button */}
+                                    <div className="mb-3">
+                                        <button type="submit" className="btn btn-primary" disabled={loaderStatus}>
+                                        {loaderStatus ? 'Saqlanmoqda...' : 'Saqlash'}
+                                        </button>
+                                    </div>
+                                    </form>
                               </div>
                             </div>
                           </div>
