@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { MagnifyingGlass } from "react-loader-spinner";
 import amazonpay from "../../images/amazonpay.svg";
@@ -13,11 +13,11 @@ import AccountNavbar from "./AccountNavbar";
 const MyAccountPaymentMethod = () => {
   // loading
   const [loaderStatus, setLoaderStatus] = useState(false);
-//   useEffect(() => {
-//     setTimeout(() => {
-//       setLoaderStatus(false);
-//     }, 0);
-//   }, []);
+  useEffect(() => {
+    setTimeout(() => {
+      setLoaderStatus(false);
+    }, 0);
+  }, []);
 
   return (
     <div>
