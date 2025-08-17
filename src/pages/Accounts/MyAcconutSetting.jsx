@@ -37,7 +37,7 @@ const MyAcconutSetting = () => {
         setLoaderStatus(false);
       };
       getUserData();
-    }, []);
+    }, [dispatch]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

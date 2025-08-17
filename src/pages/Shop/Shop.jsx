@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -59,7 +59,7 @@ function Dropdown() {
       setLoaderStatus(false);
     }, 1500);
   }, []);
-
+  console.log(loaderStatus)
   // Search, filtering, sorting, pagination states
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
@@ -114,7 +114,7 @@ function Dropdown() {
       <ScrollToTop />
       <div className="container">
         <div className="row">
-          <h5 className="mb-3 mt-8"></h5>
+          <h5 className="mb-3 mt-8">{" "}</h5>
 
           {/* Sidebar */}
           <div className="col-md-3">

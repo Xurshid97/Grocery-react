@@ -5,7 +5,6 @@ import ScrollToTop from "../ScrollToTop";
 import AccountNavbar from "./AccountNavbar";
 
 const MyAccountAddress = () => {
-    const currentActive = "/MyAccountAddress";
   // loading
   const [loaderStatus, setLoaderStatus] = useState(true);
   useEffect(() => {

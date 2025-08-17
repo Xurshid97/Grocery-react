@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import productimage1 from '../../images/product-img-1.jpg'
-import productimage2 from '../../images/product-img-2.jpg'
-import productimage3 from '../../images/product-img-3.jpg'
-import productimage4 from '../../images/product-img-4.jpg'
+// import productimage1 from '../../images/product-img-1.jpg'
+// import productimage2 from '../../images/product-img-2.jpg'
+// import productimage3 from '../../images/product-img-3.jpg'
+// import productimage4 from '../../images/product-img-4.jpg'
 import { MagnifyingGlass } from 'react-loader-spinner'
 import ScrollToTop from "../ScrollToTop";
 
 import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 
 const ShopCheckOut = () => {
     const shopCartItems = useSelector((state) => state.shopCart.list);

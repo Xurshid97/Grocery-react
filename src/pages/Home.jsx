@@ -4,12 +4,12 @@ import gift from "../images/gift.svg";
 import package1 from "../images/package.svg";
 import refresh from "../images/refresh-cw.svg";
 import { Link } from "react-router-dom";
-import React, { useState } from "react";
+import { useState } from "react";
 import ProductItem from "../ProductList/ProductItem";
 import { Zoom } from "react-awesome-reveal";
 import { useEffect } from "react";
 import FAQ from "./FooterElements/Faq";
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const Home = () => {
   const { categories } = useSelector(
@@ -40,131 +40,132 @@ const Home = () => {
     };
   }, []);
 
-  const settings1 = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    initialSlide: 1,
-    responsive: [
-      {
-        breakpoint: 1600,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        },
-      },
-      {
-        breakpoint: 900,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-    autoplay: true,
-    autoplaySpeed: 2000,
-  };
-  const settings2 = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 2,
-    initialSlide: 1,
-    responsive: [
-      {
-        breakpoint: 1600,
-        settings: {
-          slidesToShow: 5,
-          slidesToScroll: 1,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 4,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        },
-      },
-      {
-        breakpoint: 900,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-    autoplay: true,
-    autoplaySpeed: 2000,
-  };
+//   const settings1 = {
+//     dots: true,
+//     infinite: true,
+//     speed: 500,
+//     slidesToShow: 3,
+//     slidesToScroll: 1,
+//     initialSlide: 1,
+//     responsive: [
+//       {
+//         breakpoint: 1600,
+//         settings: {
+//           slidesToShow: 3,
+//           slidesToScroll: 1,
+//           infinite: true,
+//           dots: true,
+//         },
+//       },
+//       {
+//         breakpoint: 1024,
+//         settings: {
+//           slidesToShow: 3,
+//           slidesToScroll: 1,
+//           initialSlide: 1,
+//         },
+//       },
+//       {
+//         breakpoint: 900,
+//         settings: {
+//           slidesToShow: 3,
+//           slidesToScroll: 1,
+//           initialSlide: 1,
+//         },
+//       },
+//       {
+//         breakpoint: 768,
+//         settings: {
+//           slidesToShow: 3,
+//           slidesToScroll: 1,
+//           initialSlide: 1,
+//         },
+//       },
+//       {
+//         breakpoint: 600,
+//         settings: {
+//           slidesToShow: 2,
+//           slidesToScroll: 1,
+//           initialSlide: 1,
+//         },
+//       },
+//       {
+//         breakpoint: 480,
+//         settings: {
+//           slidesToShow: 1,
+//           slidesToScroll: 1,
+//         },
+//       },
+//     ],
+//     autoplay: true,
+//     autoplaySpeed: 2000,
+//   };
+//   const settings2 = {
+//     dots: true,
+//     infinite: true,
+//     speed: 500,
+//     slidesToShow: 5,
+//     slidesToScroll: 2,
+//     initialSlide: 1,
+//     responsive: [
+//       {
+//         breakpoint: 1600,
+//         settings: {
+//           slidesToShow: 5,
+//           slidesToScroll: 1,
+//           infinite: true,
+//           dots: true,
+//         },
+//       },
+//       {
+//         breakpoint: 1024,
+//         settings: {
+//           slidesToShow: 4,
+//           slidesToScroll: 1,
+//           initialSlide: 1,
+//         },
+//       },
+//       {
+//         breakpoint: 900,
+//         settings: {
+//           slidesToShow: 3,
+//           slidesToScroll: 1,
+//           initialSlide: 1,
+//         },
+//       },
+//       {
+//         breakpoint: 768,
+//         settings: {
+//           slidesToShow: 3,
+//           slidesToScroll: 1,
+//           initialSlide: 1,
+//         },
+//       },
+//       {
+//         breakpoint: 600,
+//         settings: {
+//           slidesToShow: 2,
+//           slidesToScroll: 1,
+//           initialSlide: 1,
+//         },
+//       },
+//       {
+//         breakpoint: 480,
+//         settings: {
+//           slidesToShow: 1,
+//           slidesToScroll: 1,
+//         },
+//       },
+//     ],
+//     autoplay: true,
+//     autoplaySpeed: 2000,
+//   };
   // loading
   const [loaderStatus, setLoaderStatus] = useState(true);
   useEffect(() => {
     setTimeout(() => {
       setLoaderStatus(false);
+      console.log(loaderStatus)
     }, 1500);
   }, []);
 

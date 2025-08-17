@@ -12,7 +12,6 @@ import ScrollToTop from "../ScrollToTop";
 import AccountNavbar from "./AccountNavbar";
 
 const MyAccountOrder = () => {
-    const currentActive = "/MyAccountOrder";
   // loading
   const [loaderStatus, setLoaderStatus] = useState(true);
   useEffect(() => {

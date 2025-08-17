@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import signupimage from "../../images/signup-g.svg";
+import { useState } from "react";
+// import signupimage from "../../images/signup-g.svg";
 import { Link, useNavigate } from "react-router-dom";
 import ScrollToTop from "../ScrollToTop";
 import { registerUser } from "../../utils/api";
@@ -23,6 +23,7 @@ const MyAccountSignUp = () => {
   const [error, setError] = useState(null);
 
   const handleChange = (e) => {
+    setLoaderStatus(false)
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,

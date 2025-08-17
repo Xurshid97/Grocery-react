@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import signinimage from "../../images/signin-g.svg";
+import { useState } from "react";
+// import signinimage from "../../images/signin-g.svg";
 import { Link, useNavigate } from "react-router-dom";
 import ScrollToTop from "../ScrollToTop";
 import { loginUser } from "../../utils/api"; // Import your loginUser function
@@ -22,7 +22,7 @@ const MyAccountSignIn = () => {
     e.preventDefault();
     setError(null);
     setLoading(true);
-
+    setLoaderStatus(false); // Set loader status to true
     try {
       const response = await loginUser({
       username: phone, // send phone as username
