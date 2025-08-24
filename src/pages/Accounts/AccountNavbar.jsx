@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 export default function AccountNavbar({currentActive}) {
 
     return(
-        <div className="col-lg-3 col-md-4 col-12 border-end  d-none d-md-block">
+        <div className="col-lg-3 col-md-4 col-12 border-end  d-none d-md-block mt-12">
             <div className="pt-10 pe-lg-10">
             {/* nav item */}
             <ul className="nav flex-column nav-pills nav-pills-dark">

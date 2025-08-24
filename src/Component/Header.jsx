@@ -197,8 +197,8 @@ const dispatch = useDispatch();
     </div>
       </nav >
       <>
-        <div className="container  displaydesign d-flex align-items-center">
-          <div className="row g-4"
+        {/* <div className="container  displaydesign d-flex align-items-center"> */}
+          {/* <div className="row g-4"
             style={{ width: "100%" }}
           >
             <div className="col-8 col-sm-4 col-lg-9 py-2 ">
@@ -210,7 +210,7 @@ const dispatch = useDispatch();
                 placeholder="Type to search..."
               />
             </div>
-          </div>
+          </div> */}
 
           {/* <li className="nav-item"
             style={{ display: "flex", alignItems: "center" }}
@@ -275,7 +275,7 @@ const dispatch = useDispatch();
                 Profil
             </Link>
           </li> */}
-        </div>
+        {/* </div> */}
       </>
   <>
     <div>
