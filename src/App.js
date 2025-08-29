@@ -28,7 +28,7 @@ import SingleShop from "./pages/store/SingleShop";
 import MyAccountOrder from "./pages/Accounts/MyAccountOrder";
 import MyAccountSetting from "./pages/Accounts/MyAcconutSetting";
 // import MyAcconutNotification from "./pages/Accounts/MyAcconutNotification";
-import MyAccountPaymentMethod from "./pages/Accounts/MyAccountPaymentMethod";
+// import MyAccountPaymentMethod from "./pages/Accounts/MyAccountPaymentMethod";
 import MyAccountAddress from "./pages/Accounts/MyAccountAddress";
 // import MyAccountForgetPassword from "./pages/Accounts/MyAccountForgetPassword";
 import MyAccountSignIn from "./pages/Accounts/MyAccountSignIn";
@@ -75,7 +75,7 @@ const App = () => {
           <Route path="/MyAccountOrder" element={<MyAccountOrder />} />
           <Route path="/MyAccountSetting" element={<MyAccountSetting />} />
           {/* <Route path="/MyAccountNotification" element={<MyAccountNotification />} /> */}
-          <Route path="/MyAccountPaymentMethod" element={<MyAccountPaymentMethod />} />
+          {/* <Route path="/MyAccountPaymentMethod" element={<MyAccountPaymentMethod />} /> */}
           <Route path="/MyAccountAddress" element={<MyAccountAddress />} />
           {/* <Route path="/MyAccountForgetPassword" element={<MyAccountForgetPassword />} /> */}
           <Route path="/MyAccountSignIn" element={<MyAccountSignIn />} />

@@ -1,45 +1,31 @@
 export default function AccountNavbarOffCanvas({currentActive}) {
-    
+
     return(
         <div className="offcanvas-body">
                       <ul className="nav flex-column nav-pills nav-pills-dark">
                           {/* nav item */}
                           <li className="nav-item">
                               <a
-                                  className="nav-link active"
+                                  className={`nav-link ${currentActive === '/MyAccountOrder' ? 'active' : ''}`}
                                   aria-current="page"
                                   href="/MyAccountOrder"
                               >
                                   <i className="fas fa-shopping-bag me-2" />
-                                  Your Orders
+                                  Sizning Buyurtmalaringiz
                               </a>
                           </li>
                           {/* nav item */}
                           <li className="nav-item">
-                              <a className="nav-link " href="/MyAccountSetting">
+                              <a className={`nav-link ${currentActive === '/MyAccountSetting' ? 'active' : ''}`} href="/MyAccountSetting">
                                   <i className="fas fa-cog me-2" />
-                                  Settings
+                                  Profil
                               </a>
                           </li>
                           {/* nav item */}
                           <li className="nav-item">
-                              <a className="nav-link" href="/MyAccountAddress">
+                              <a className={`nav-link ${currentActive === '/MyAccountAddress' ? 'active' : ''}`} href="/MyAccountAddress">
                                   <i className="fas fa-map-marker-alt me-2" />
-                                  Address
-                              </a>
-                          </li>
-                          {/* nav item */}
-                          <li className="nav-item">
-                              <a className="nav-link" href="/MyAcconutPaymentMethod">
-                                  <i className="fas fa-credit-card me-2" />
-                                  Payment Method
-                              </a>
-                          </li>
-                          {/* nav item */}
-                          <li className="nav-item">
-                              <a className="nav-link" href="/MyAcconutNotification">
-                                  <i className="fas fa-bell me-2" />
-                                  Notification
+                                  Manzil
                               </a>
                           </li>
                       </ul>
@@ -47,11 +33,25 @@ export default function AccountNavbarOffCanvas({currentActive}) {
                       <div>
                           {/* nav  */}
                           <ul className="nav flex-column nav-pills nav-pills-dark">
+                            <li className="nav-item">
+                                <a className={`nav-link ${currentActive === '/MyAccountSignUp' ? 'active' : ''}`} href="/MyAccountSignIn">
+                                    Ro'yxatdan o'tish
+                                </a>
+                            </li>
+                            <li className="nav-item">
+                                <a className={`nav-link ${currentActive === '/MyAccountSignIn' ? 'active' : ''}`} href="/MyAccountSignIn">
+                                    Kirish
+                                </a>
+                            </li>
                               {/* nav item */}
                               <li className="nav-item">
-                                  <a className="nav-link " href="/Grocery-react/">
+                                  <a className="nav-link " href="/MyAccountSignIn" onClick={() => {
+                                        // Clear user data from local storage or cookies
+                                        localStorage.removeItem('accessToken');
+                                        // Optionally, you can also clear any user-related state in your app
+                                    }}>
                                       <i className="fas fa-sign-out-alt me-2" />
-                                      Log out
+                                      Chiqish
                                   </a>
                               </li>
                           </ul>

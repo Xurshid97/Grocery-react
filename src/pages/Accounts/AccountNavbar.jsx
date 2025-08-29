@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 export default function AccountNavbar({currentActive}) {
 
     return(
-        <div className="col-lg-3 col-md-4 col-12 border-end  d-none d-md-block mt-12">
+        <div className="col-lg-3 col-md-4 col-12 border-end  d-none d-md-block">
             <div className="pt-10 pe-lg-10">
             {/* nav item */}
             <ul className="nav flex-column nav-pills nav-pills-dark">
@@ -34,14 +34,6 @@ export default function AccountNavbar({currentActive}) {
                     Manzil
                 </Link>
                 </li>
-                {/* nav item */}
-                <li className="nav-item">
-                <Link className={`nav-link ${currentActive === '/MyAccountPaymentMethod' ? 'active' : ''}`} to="/MyAccountPaymentMethod">
-                    <i className="fas fa-credit-card me-2" />
-                    To'lov usuli
-                </Link>
-                </li>
-                {/* nav item */}
                 <li className="nav-item">
                 <hr />
                 </li>
@@ -57,9 +49,13 @@ export default function AccountNavbar({currentActive}) {
                 </Link>
                 </li>
                 <li className="nav-item">
-                <Link className="nav-link " to="/Grocery-react/">
+                <Link className="nav-link " to="/MyAccountSignIn" onClick={() => {
+                    // Clear user data from local storage or cookies
+                    localStorage.removeItem('accessToken');
+                    // Optionally, you can also clear any user-related state in your app
+                }}>
                     <i className="fas fa-sign-out-alt me-2" />
-                    Log out
+                    Chiqish
                 </Link>
                 </li>
             </ul>

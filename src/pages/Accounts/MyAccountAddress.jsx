@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { MagnifyingGlass } from "react-loader-spinner";
 import ScrollToTop from "../ScrollToTop";
 import AccountNavbar from "./AccountNavbar";
 
-const MyAccountAddress = () => {
-  // loading
-  const [loaderStatus, setLoaderStatus] = useState(true);
-  useEffect(() => {
-    setTimeout(() => {
-      setLoaderStatus(false);
-    }, 0);
-  }, []);
+import { useSelector } from "react-redux";
+import AccountNavbarOffCanvas from "./AccountNavbarOffCanvas";
+import React, { useEffect, useState } from "react";
 
+const MyAccountAddress = () => {
+    const userAddress = useSelector((state) => state.user);
+
+    const { homeAddress } = userAddress;
+const [width, setWidth] = useState(window.innerWidth);
+    useEffect(() => {
+        const handleResize = () => setWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
   return (
     <div>
        <>
@@ -25,138 +28,84 @@ const MyAccountAddress = () => {
             {/* container */}
             <div className="container">
               {/* row */}
-              <div className="row pt-10">
+              <div className="row pt-5">
+                {
+                    width < 765 && (
+                                <div className="d-lg-none mb-1 d-flex justify-content-end">
+                                <button
+                                    className="btn btn-outline-primary"
+                                    type="button"
+                                    data-bs-toggle="offcanvas"
+                                    data-bs-target="#offcanvasAccount"
+                                    aria-controls="offcanvasAccount"
+                                >
+                                    <i className="fas fa-bars"></i>
+                                </button>
+                            </div>
+                            )
+                }
                 <AccountNavbar currentActive="/MyAccountAddress" />
                 <div className="col-lg-9 col-md-8 col-12">
                   <div>
-                    {loaderStatus ? (
-                      <div className="loader-container">
-                        {/* <PulseLoader loading={loaderStatus} size={50} color="#0aad0a" /> */}
-                        <MagnifyingGlass
-                          visible={true}
-                          height="100"
-                          width="100"
-                          ariaLabel="magnifying-glass-loading"
-                          wrapperStyle={{}}
-                          wrapperclassName="magnifying-glass-wrapper"
-                          glassColor="#c0efff"
-                          color="#0aad0a"
-                        />
-                      </div>
-                    ) : (
-                      <>
+                    <>
                         <div className="p-6 p-lg-10">
                           <div className="d-flex justify-content-between mb-6">
-                            {/* heading */}
-                            <h2 className="mb-0">Address</h2>
-                            {/* button */}
-                            <Link
-                              to="#"
-                              className="btn btn-outline-primary"
-                              data-bs-toggle="modal"
-                              data-bs-target="#addAddressModal"
-                            >
-                              Add a new address{" "}
-                            </Link>
+                            <h2 className="mb-0">Manzil</h2>
                           </div>
-                          <div className="row">
-                            {/* col */}
-                            <div className="col-lg-5 col-xxl-4 col-12 mb-4">
-                              {/* form */}
-                              <div className="border p-6 rounded-3">
-                                <div className="form-check mb-4">
-                                  <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="flexRadioDefault"
-                                    id="homeRadio"
-                                    defaultChecked
-                                  />
-                                  <label
-                                    className="form-check-label text-dark fw-semi-bold"
-                                    htmlFor="homeRadio"
-                                  >
-                                    Home
-                                  </label>
+                          {
+                            homeAddress.street !== "" && (
+                                <div className="row">
+                                    {/* col */}
+                                    <div className="col-lg-5 col-xxl-4 col-12 mb-4">
+                                    {/* form */}
+                                    <div className="border p-6 rounded-3">
+                                        <div className="form-check mb-4">
+                                        <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="flexRadioDefault"
+                                            id="homeRadio"
+                                            defaultChecked
+                                        />
+                                        <label
+                                            className="form-check-label text-dark fw-semi-bold"
+                                            htmlFor="homeRadio"
+                                        >
+                                            Uy manzili
+                                        </label>
+                                        </div>
+                                        {/* address */}
+                                        <p className="mb-6">
+                                        {homeAddress.street}
+                                        <br />
+                                        {homeAddress.city} {homeAddress.state} {homeAddress.zip} {homeAddress.country}
+                                        <br />
+                                        </p>
+                                        {/* btn */}
+                                        <Link to="#" className="btn btn-info btn-sm">
+                                        Doimiy manzil
+                                        </Link>
+                                        <div className="mt-4">
+                                        <Link to="#" className="text-inherit">
+                                            Edit{" "}
+                                        </Link>
+                                        <Link
+                                            to="#"
+                                            className="text-danger ms-3"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteModal"
+                                        >
+                                            Delete
+                                        </Link>
+                                        </div>
+                                    </div>
+                                    </div>
                                 </div>
-                                {/* address */}
-                                <p className="mb-6">
-                                  Jitu Chauhan
-                                  <br />
-                                  4450 North Avenue Oakland, <br />
-                                  Nebraska, United States,
-                                  <br />
-                                  402-776-1106
-                                </p>
-                                {/* btn */}
-                                <Link to="#" className="btn btn-info btn-sm">
-                                  Default address
-                                </Link>
-                                <div className="mt-4">
-                                  <Link to="#" className="text-inherit">
-                                    Edit{" "}
-                                  </Link>
-                                  <Link
-                                    to="#"
-                                    className="text-danger ms-3"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#deleteModal"
-                                  >
-                                    Delete
-                                  </Link>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-lg-5 col-xxl-4 col-12 mb-4">
-                              {/* input */}
-                              <div className="border p-6 rounded-3">
-                                <div className="form-check mb-4">
-                                  <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="flexRadioDefault"
-                                    id="officeRadio"
-                                  />
-                                  <label
-                                    className="form-check-label text-dark fw-semi-bold"
-                                    htmlFor="officeRadio"
-                                  >
-                                    Office
-                                  </label>
-                                </div>
-                                {/* nav item */}
-                                <p className="mb-6">
-                                  Nitu Chauhan
-                                  <br />
-                                  3853 Coal Road <br />
-                                  Tannersville, Pennsylvania, 18372, United
-                                  States <br />
-                                  402-776-1106
-                                </p>
-                                {/* link */}
-                                <Link to="#" className="link-primary">
-                                  Set as Default
-                                </Link>
-                                <div className="mt-4">
-                                  <Link to="#" className="text-inherit">
-                                    Edit{" "}
-                                  </Link>
-                                  {/* btn */}
-                                  <Link
-                                    to="#"
-                                    className="text-danger ms-3"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#deleteModal"
-                                  >
-                                    Delete
-                                  </Link>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+                            )
+                          }
+
                         </div>
                       </>
-                    )}
                   </div>
                 </div>
               </div>
@@ -395,62 +344,7 @@ const MyAccountAddress = () => {
               />
             </div>
             {/* offcanvas body */}
-            <div className="offcanvas-body">
-              <ul className="nav flex-column nav-pills nav-pills-dark">
-                {/* nav item */}
-                <li className="nav-item">
-                  <a
-                    className="nav-link active"
-                    aria-current="page"
-                    href="/MyAccountOrder"
-                  >
-                    <i className="fas fa-shopping-bag me-2" />
-                    Your Orders
-                  </a>
-                </li>
-                {/* nav item */}
-                <li className="nav-item">
-                  <a className="nav-link " href="/MyAccountSetting">
-                    <i className="fas fa-cog me-2" />
-                    Settings
-                  </a>
-                </li>
-                {/* nav item */}
-                <li className="nav-item">
-                  <a className="nav-link" href="/MyAccountAddress">
-                    <i className="fas fa-map-marker-alt me-2" />
-                    Address
-                  </a>
-                </li>
-                {/* nav item */}
-                <li className="nav-item">
-                  <a className="nav-link" href="/MyAcconutPaymentMethod">
-                    <i className="fas fa-credit-card me-2" />
-                    Payment Method
-                  </a>
-                </li>
-                {/* nav item */}
-                <li className="nav-item">
-                  <a className="nav-link" href="/MyAcconutNotification">
-                    <i className="fas fa-bell me-2" />
-                    Notification
-                  </a>
-                </li>
-              </ul>
-              <hr className="my-6" />
-              <div>
-                {/* nav  */}
-                <ul className="nav flex-column nav-pills nav-pills-dark">
-                  {/* nav item */}
-                  <li className="nav-item">
-                    <a className="nav-link " href="/Grocery-react/">
-                      <i className="fas fa-sign-out-alt me-2" />
-                      Log out
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
+            <AccountNavbarOffCanvas currentActive="/MyAccountAddress" />
           </div>
         </div>
       </>

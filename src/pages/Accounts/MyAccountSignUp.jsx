@@ -1,17 +1,15 @@
-import { useState } from "react";
-// import signupimage from "../../images/signup-g.svg";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ScrollToTop from "../ScrollToTop";
 import { registerUser } from "../../utils/api";
 import { useDispatch } from 'react-redux';
 import {login} from '../../redux_features/user/user_slicer';
-import { MagnifyingGlass } from "react-loader-spinner";
 import AccountNavbar from "./AccountNavbar";
+import AccountNavbarOffCanvas from "./AccountNavbarOffCanvas";
 
 const MyAccountSignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-    const [loaderStatus, setLoaderStatus] = useState(false);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -23,7 +21,6 @@ const MyAccountSignUp = () => {
   const [error, setError] = useState(null);
 
   const handleChange = (e) => {
-    setLoaderStatus(false)
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -54,12 +51,14 @@ const MyAccountSignUp = () => {
     }
   };
 
+  const [width, setWidth] = useState(window.innerWidth);
+      useEffect(() => {
+          const handleResize = () => setWidth(window.innerWidth);
+          window.addEventListener('resize', handleResize);
+          return () => window.removeEventListener('resize', handleResize);
+      }, []);
+
   return (
-    // <div>
-    //   <ScrollToTop />
-
-    // </div>
-
     <div>
       <>
         <div>
@@ -73,25 +72,25 @@ const MyAccountSignUp = () => {
                     {/* container */}
                     <div className="container">
                       {/* row */}
-                      <div className="row pt-10">
+                      <div className="row pt-3">
+                        {
+                            width < 765 && (
+                                <div className="d-lg-none mb-1 d-flex justify-content-end">
+                                <button
+                                    className="btn btn-outline-primary"
+                                    type="button"
+                                    data-bs-toggle="offcanvas"
+                                    data-bs-target="#offcanvasAccount"
+                                    aria-controls="offcanvasAccount"
+                                >
+                                    <i className="fas fa-bars"></i>
+                                </button>
+                            </div>
+                            )
+                        }
                         <AccountNavbar currentActive="/MyAccountSignUp" />
                         <div className="col-lg-9 col-md-8 col-12">
                           <div>
-                            {loaderStatus ? (
-                              <div className="loader-container">
-                                {/* <PulseLoader loading={loaderStatus} size={50} color="#0aad0a" /> */}
-                                <MagnifyingGlass
-                                  visible={true}
-                                  height="100"
-                                  width="100"
-                                  ariaLabel="magnifying-glass-loading"
-                                  wrapperStyle={{}}
-                                  wrapperclassName="magnifying-glass-wrapper"
-                                  glassColor="#c0efff"
-                                  color="#0aad0a"
-                                />
-                              </div>
-                            ) : (
                               <>
                                 <div className="col-12 col-md-6 offset-lg-1 col-lg-8 order-lg-2 order-1">
                                     <div className="mb-lg-9 mb-5">
@@ -166,7 +165,6 @@ const MyAccountSignUp = () => {
                                     </form>
                                     </div>
                               </>
-                            )}
                           </div>
                         </div>
                       </div>
@@ -182,7 +180,7 @@ const MyAccountSignUp = () => {
                     {/* offcanvas header */}
                     <div className="offcanvas-header">
                       <h5 className="offcanvas-title" id="offcanvasAccountLabel">
-                        My Account
+                        Mening akkauntim
                       </h5>
                       <button
                         type="button"
@@ -192,62 +190,7 @@ const MyAccountSignUp = () => {
                       />
                     </div>
                     {/* offcanvas body */}
-                    <div className="offcanvas-body">
-                      <ul className="nav flex-column nav-pills nav-pills-dark">
-                        {/* nav item */}
-                        <li className="nav-item">
-                          <a
-                            className="nav-link active"
-                            aria-current="page"
-                            href="/MyAccountOrder"
-                          >
-                            <i className="fas fa-shopping-bag me-2" />
-                            Your Orders
-                          </a>
-                        </li>
-                        {/* nav item */}
-                        <li className="nav-item">
-                          <a className="nav-link " href="/MyAccountSetting">
-                            <i className="fas fa-cog me-2" />
-                            Settings
-                          </a>
-                        </li>
-                        {/* nav item */}
-                        <li className="nav-item">
-                          <a className="nav-link" href="/MyAccountAddress">
-                            <i className="fas fa-map-marker-alt me-2" />
-                            Address
-                          </a>
-                        </li>
-                        {/* nav item */}
-                        <li className="nav-item">
-                          <a className="nav-link" href="/MyAcconutPaymentMethod">
-                            <i className="fas fa-credit-card me-2" />
-                            Payment Method
-                          </a>
-                        </li>
-                        {/* nav item */}
-                        <li className="nav-item">
-                          <a className="nav-link" href="/MyAcconutNotification">
-                            <i className="fas fa-bell me-2" />
-                            Notification
-                          </a>
-                        </li>
-                      </ul>
-                      <hr className="my-6" />
-                      <div>
-                        {/* nav  */}
-                        <ul className="nav flex-column nav-pills nav-pills-dark">
-                          {/* nav item */}
-                          <li className="nav-item">
-                            <a className="nav-link " href="/Grocery-react/">
-                              <i className="fas fa-sign-out-alt me-2" />
-                              Log out
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
+                    <AccountNavbarOffCanvas currentActive="/MyAccountSignUp" />
                   </div>
                 </div>
               </>

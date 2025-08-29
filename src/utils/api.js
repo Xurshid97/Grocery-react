@@ -1,6 +1,6 @@
 // create a utility function to handle API requests
 import axios from "axios";
-export const API_BASE_URL = "https://127.0.0.1:8000/api"; // replace with your actual API base URL
+export const API_BASE_URL = "http://127.0.0.1:8000/api"; // replace with your actual API base URL
 
 // function to make post request to the endpoint for registering a new user
 export const registerUser = async (userData) => {
