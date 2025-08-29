@@ -141,15 +141,13 @@ const ShopCart = () => {
                         ))}
                     </ul>
                     {/* btn */}
-                    <div className="d-flex justify-content-between mt-4">
-                      <Link to
-                      ="#!" className="btn btn-primary">
+                    <div className="d-flex justify-content-end mt-4">
+                      {/* <Link to="/ShopCheckOut" className="btn btn-primary">
                         Sotuvni davom ettirish
-                      </Link>
-                      <Link to
-                      ="#!" className="btn btn-dark">
-                        Savatchani yangilash
-                      </Link>
+                      </Link> */}
+                      {/* <Link to="#!" className="btn btn-dark">
+                        Savatchani bo'shatish
+                      </Link> */}
                     </div>
                   </div>
                 </div>

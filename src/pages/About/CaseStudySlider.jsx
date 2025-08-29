@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 import OwlCarousel from "react-owl-carousel";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
-import member1 from "../../images/01.jpg";
-import member2 from '../../images/02.jpg'
-import member3 from "../../images/03.jpg";
 import { Slide } from "react-awesome-reveal";
 
 const Testimonials = () => {
@@ -47,9 +44,9 @@ const Testimonials = () => {
               <div className="section-title-left pt-80">
                 <Slide direction="down" delay={0.3}>
                 <h3 className="party">
-                  Hear Out Our
+                  Eng
                   <br />
-                  Happy Clients!
+                  Baxtli mijozlar!
                 </h3>
                 </Slide>
               </div>
@@ -63,7 +60,7 @@ const Testimonials = () => {
               {/* Testimonial items */}
               <div className="testmonail-item">
                 {/* <div class="owl-item"> */}
-                <div className="testmonail-box">
+                {/* <div className="testmonail-box">
                   <div className="client-img">
                     <img src={member1} alt="Client" />
                     <div className="quote-icon">
@@ -82,13 +79,13 @@ const Testimonials = () => {
                     <h6>Rabie Elkheir</h6>
                     <span>Our Customer </span>
                   </div>
-                </div>
+                </div> */}
                 {/* </div> */}
               </div>
 
               <div className="testmonail-item">
                 {/* <div class="owl-item"> */}
-                <div className="testmonail-box">
+                {/* <div className="testmonail-box">
                   <div className="client-img">
                     <img src={member2} alt="Client" />
                     <div className="quote-icon">
@@ -106,12 +103,12 @@ const Testimonials = () => {
                     <h6>Sara Wander</h6>
                     <span>Our Customer</span>
                   </div>
-                </div>
+                </div> */}
                 {/* </div> */}
               </div>
               <div className="testmonail-item">
                 {/* <div class="owl-item"> */}
-                <div className="testmonail-box">
+                {/* <div className="testmonail-box">
                   <div className="client-img">
                     <img src={member3} alt="Client" />
                     <div className="quote-icon">
@@ -129,7 +126,7 @@ const Testimonials = () => {
                     <h6>Nour Eldin</h6>
                     <span>Our Customer</span>
                   </div>
-                </div>
+                </div> */}
                 {/* </div> */}
               </div>
 

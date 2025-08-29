@@ -24,8 +24,8 @@ function Dropdown() {
     const handleAddClick = (productName) => {
         Swal.fire({
           icon: "success",
-          title: "Added to Cart",
-          text: `${productName} has been added to your cart!`,
+          title: "Savatchaga qo'shildi",
+          text: `${productName} savatchangizga qo'shildi!`,
           showConfirmButton: true,
           timer: 2000,
         });
