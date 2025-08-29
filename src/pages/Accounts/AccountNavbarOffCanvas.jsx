@@ -1,3 +1,5 @@
+import {Link} from "react-router-dom";
+
 export default function AccountNavbarOffCanvas({currentActive}) {
 
     return(
@@ -5,28 +7,28 @@ export default function AccountNavbarOffCanvas({currentActive}) {
                       <ul className="nav flex-column nav-pills nav-pills-dark">
                           {/* nav item */}
                           <li className="nav-item">
-                              <a
+                              <Link
                                   className={`nav-link ${currentActive === '/MyAccountOrder' ? 'active' : ''}`}
                                   aria-current="page"
-                                  href="/MyAccountOrder"
+                                  to="/MyAccountOrder"
                               >
                                   <i className="fas fa-shopping-bag me-2" />
                                   Sizning Buyurtmalaringiz
-                              </a>
+                              </Link>
                           </li>
                           {/* nav item */}
                           <li className="nav-item">
-                              <a className={`nav-link ${currentActive === '/MyAccountSetting' ? 'active' : ''}`} href="/MyAccountSetting">
+                              <Link className={`nav-link ${currentActive === '/MyAccountSetting' ? 'active' : ''}`} to="/MyAccountSetting">
                                   <i className="fas fa-cog me-2" />
                                   Profil
-                              </a>
+                              </Link>
                           </li>
                           {/* nav item */}
                           <li className="nav-item">
-                              <a className={`nav-link ${currentActive === '/MyAccountAddress' ? 'active' : ''}`} href="/MyAccountAddress">
+                              <Link className={`nav-link ${currentActive === '/MyAccountAddress' ? 'active' : ''}`} to="/MyAccountAddress">
                                   <i className="fas fa-map-marker-alt me-2" />
                                   Manzil
-                              </a>
+                              </Link>
                           </li>
                       </ul>
                       <hr className="my-6" />
@@ -34,25 +36,25 @@ export default function AccountNavbarOffCanvas({currentActive}) {
                           {/* nav  */}
                           <ul className="nav flex-column nav-pills nav-pills-dark">
                             <li className="nav-item">
-                                <a className={`nav-link ${currentActive === '/MyAccountSignUp' ? 'active' : ''}`} href="/MyAccountSignIn">
+                                <Link className={`nav-link ${currentActive === '/MyAccountSignUp' ? 'active' : ''}`} to="/MyAccountSignUp">
                                     Ro'yxatdan o'tish
-                                </a>
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <a className={`nav-link ${currentActive === '/MyAccountSignIn' ? 'active' : ''}`} href="/MyAccountSignIn">
+                                <Link className={`nav-link ${currentActive === '/MyAccountSignIn' ? 'active' : ''}`} to="/MyAccountSignIn">
                                     Kirish
-                                </a>
+                                </Link>
                             </li>
                               {/* nav item */}
                               <li className="nav-item">
-                                  <a className="nav-link " href="/MyAccountSignIn" onClick={() => {
+                                  <Link className="nav-link " to="/MyAccountSignIn" onClick={() => {
                                         // Clear user data from local storage or cookies
                                         localStorage.removeItem('accessToken');
                                         // Optionally, you can also clear any user-related state in your app
                                     }}>
                                       <i className="fas fa-sign-out-alt me-2" />
                                       Chiqish
-                                  </a>
+                                  </Link>
                               </li>
                           </ul>
                       </div>
