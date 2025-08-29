@@ -82,7 +82,7 @@ const [width, setWidth] = useState(window.innerWidth);
                           <div>
 
                               <>
-                                <div className="col-6 col-md-6 offset-lg-1 col-lg-8 order-lg-2 order-1">
+                                <div className="col-12 col-md-6 offset-lg-1 col-lg-8 order-lg-2 order-1">
                                     <div className="mb-lg-9 mb-5">
                                     <h1 className="mb-1 h2 fw-bold">Sign in to FreshCart</h1>
                                     <p>
