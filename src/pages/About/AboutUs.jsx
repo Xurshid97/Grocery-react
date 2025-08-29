@@ -7,7 +7,7 @@ import award from "../../images/award.gif";
 
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import SocialNetworksCarousel from "./SocialNetworksCarousel";
+// import SocialNetworksCarousel from "./SocialNetworksCarousel";
 import CaseStudySlider from "./CaseStudySlider";
 import { MagnifyingGlass } from "react-loader-spinner";
 import { Slide, Zoom } from "react-awesome-reveal";
@@ -331,7 +331,7 @@ const AboutUs = () => {
             </>
 
             <>
-              <SocialNetworksCarousel />
+              {/* <SocialNetworksCarousel /> */}
             </>
           </>
         )}
