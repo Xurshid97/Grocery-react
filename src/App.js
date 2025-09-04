@@ -13,7 +13,7 @@ import Home from "./pages/Home";
 import AboutUs from "./pages/About/AboutUs";
 import Blog from "./pages/About/Blog";
 import BlogCategory from "./pages/About/BlogCategory";
-import Contact from "./pages/About/Contact";
+// import Contact from "./pages/About/Contact";
 // Shop pages
 import Shop from "./pages/Shop/Shop";
 import ShopGridCol3 from "./pages/Shop/ShopGridCol3";
@@ -33,10 +33,10 @@ import MyAccountAddress from "./pages/Accounts/MyAccountAddress";
 // import MyAccountForgetPassword from "./pages/Accounts/MyAccountForgetPassword";
 import MyAccountSignIn from "./pages/Accounts/MyAccountSignIn";
 import MyAccountSignUp from "./pages/Accounts/MyAccountSignUp";
-import FAQ from "./pages/FooterElements/Faq";
-import Coupons from "./pages/FooterElements/Coupons";
-import Careers from "./pages/FooterElements/Careers";
-import HelpCenter from "./pages/FooterElements/HelpCenter";
+// import FAQ from "./pages/FooterElements/Faq";
+// import Coupons from "./pages/FooterElements/Coupons";
+// import Careers from "./pages/FooterElements/Careers";
+// import HelpCenter from "./pages/FooterElements/HelpCenter";
 
 import { getProducts } from "./utils/api";
 import { useDispatch } from "react-redux";
@@ -60,6 +60,7 @@ const App = () => {
       <Router>
         <Header/>
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/Grocery-react/" element={<Home />} />
           {/* Shop pages */}
           <Route path="/Shop" element={<Shop />} />
@@ -83,13 +84,13 @@ const App = () => {
           {/* About pages */}
           <Route path="/Blog" element={<Blog />} />
           <Route path="/BlogCategory" element={<BlogCategory />} />
-          <Route path="/Contact" element={<Contact />} />
+          {/* <Route path="/Contact" element={<Contact />} /> */}
           <Route path="/AboutUs" element={<AboutUs />} />
           {/* Footer Elements */}
-          <Route path="/Faq" element={<FAQ />} />
-          <Route path="/Coupons" element={<Coupons />} />
-          <Route path="/Careers" element={<Careers />} />
-          <Route path="/helpcenter" element={<HelpCenter />} />
+          {/* <Route path="/Faq" element={<FAQ />} /> */}
+          {/* <Route path="/Coupons" element={<Coupons />} /> */}
+          {/* <Route path="/Careers" element={<Careers />} /> */}
+          {/* <Route path="/helpcenter" element={<HelpCenter />} /> */}
         </Routes>
         <Footer/>
       </Router>
