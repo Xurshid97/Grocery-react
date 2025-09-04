@@ -250,7 +250,7 @@ const Home = () => {
             </>
             <>
               {/* section category */}
-              <section className="my-lg-14 my-8">
+              <section className="my-lg-4 my-8">
                 <div className="container ">
                   <div className="row">
                     <div className="col-12">
@@ -259,9 +259,9 @@ const Home = () => {
                         <div className="section-head text-center mt-8">
                           <h3
                             className="h3style"
-                            data-title="Shop Popular Categories"
+                            data-title="Odatiy toifalar"
                           >
-                            Shop Popular Categories
+                            Odatiy toifalar
                           </h3>
                           <div className="wt-separator bg-primarys"></div>
                           <div className="wt-separator2 bg-primarys"></div>
@@ -270,7 +270,7 @@ const Home = () => {
                       </div>
                     </div>
                     <div className="row ">
-                      {categories.map((category) => (
+                      {categories.slice(0, 5).map((category) => (
                         <div
                           className="col-lg-2 col-md-4 col-6 fade-zoom"
                           key={category.id}
@@ -278,7 +278,7 @@ const Home = () => {
                           <Zoom>
                             <div className="text-center mb-10">
                               {/* img */}
-                              <Link to="#">
+                              <Link to="/Shop">
                                 <img
                                   src={category.image}
                                   alt={category.name}
@@ -289,7 +289,7 @@ const Home = () => {
                               <div className="mt-4">
                                 <h5 className="fs-6 mb-0">
                                   {" "}
-                                  <Link to="#" className="text-inherit">
+                                  <Link to="/Shop" className="text-inherit">
                                     {category.name}
                                   </Link>
                                 </h5>
@@ -298,6 +298,11 @@ const Home = () => {
                           </Zoom>
                         </div>
                       ))}
+                    </div>
+                    <div className="text-center mt-4">
+                    <Link to="/Shop" className="btn btn-primary">
+                        Boshqa bo'limlar
+                    </Link>
                     </div>
                   </div>
                 </div>

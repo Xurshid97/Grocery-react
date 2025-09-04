@@ -35,12 +35,12 @@ const ProductItem = () => {
           </div>
 
           <div className="row g-4 row-cols-lg-5 row-cols-2 row-cols-md-3">
-            {products.map((product) => (
+            {products.slice(0, 20).map((product) => (
               <div className="col fade-zoom" key={product.id}>
                 <div className="card card-product">
                   <div className="card-body">
                     <div className="text-center position-relative">
-                      <Link href="#!">
+                      <Link to="/Shop">
                         <img
                           src={product.image}
                           alt={product.name}
@@ -116,6 +116,11 @@ const ProductItem = () => {
               </div>
             ))}
           </div>
+          <div className="text-center mt-4">
+            <Link to="/Shop" className="btn btn-primary">
+                Ko'proq mahsulotlar
+            </Link>
+            </div>
         </div>
       </section>
       {/* Popular Products End*/}
