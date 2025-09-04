@@ -1,44 +1,43 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-// import productimage1 from '../../images/product-img-1.jpg'
-// import productimage2 from '../../images/product-img-2.jpg'
-// import productimage3 from '../../images/product-img-3.jpg'
-// import productimage4 from '../../images/product-img-4.jpg'
-import { MagnifyingGlass } from 'react-loader-spinner'
 import ScrollToTop from "../ScrollToTop";
 
 import { useSelector } from "react-redux";
-// import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const ShopCheckOut = () => {
     const shopCartItems = useSelector((state) => state.shopCart.list);
-   // loading
-   const [loaderStatus, setLoaderStatus] = useState(true);
-   useEffect(() => {
-     setTimeout(() => {
-       setLoaderStatus(false);
-     }, 1500);
-   }, []);
+    const address = useSelector((state) => state.user.deliveryAddress);
+    // console.log("addresses", address);
+    const dispatch = useDispatch();
+    const [newAddress, setNewAddress] = useState({
+        delivery_instructions: '',
+        street: '',
+        district: '',
+        region: '',
+        city: '',
+        postal_code: '',
+    });
+
+    function onSubmitNewAddress() {
+        dispatch({
+            type: 'user/addDeliveryAddress',
+            payload: newAddress
+        });
+        setNewAddress({
+            street: '',
+            city: '',
+            state: '',
+            zip: '',
+            country: '',
+        });
+        // close modal
+        const modal = document.getElementById('addAddressModal');
+        modal.classList.remove('show');
+    }
 
   return (
-    <div>
-      <div>
-      {loaderStatus ? (
-        <div className="loader-container">
-          {/* <PulseLoader loading={loaderStatus} size={50} color="#0aad0a" /> */}
-          <MagnifyingGlass
-            visible={true}
-            height="100"
-            width="100"
-            ariaLabel="magnifying-glass-loading"
-            wrapperStyle={{}}
-            wrapperclassName="magnifying-glass-wrapper"
-            glassColor="#c0efff"
-            color="#0aad0a"
-            />
-        </div>
-      ) : (
-        <>
+    <>
          <>
             <ScrollToTop/>
             </>
@@ -53,10 +52,10 @@ const ShopCheckOut = () => {
                 <div>
                   <div className="mb-8">
                     {/* text */}
-                    <h1 className="fw-bold mb-0">Checkout</h1>
+                    <h1 className="fw-bold mb-0">To'lov bo'limi</h1>
                     <p className="mb-0">
-                      Already have an account? Click here to{" "}
-                      <Link to="/MyAccountSignIn">Sign in</Link>.
+                      Sizda allaqachon akkaunt bormi{" "}
+                      <Link to="/MyAccountSignIn">Login</Link>.
                     </p>
                   </div>
                 </div>
@@ -93,7 +92,7 @@ const ShopCheckOut = () => {
                           data-bs-toggle="modal"
                           data-bs-target="#addAddressModal"
                         >
-                          Yangi manzil qo'shish
+                          Manzil qo'shish
                         </Link>
                         {/* collapse */}
                       </div>
@@ -104,126 +103,37 @@ const ShopCheckOut = () => {
                       >
                         <div className="mt-5">
                           <div className="row">
-                            <div className="col-lg-6 col-12 mb-4">
-                              {/* form */}
-                              <div className="border p-6 rounded-3">
-                                <div className="form-check mb-4">
-                                  <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="flexRadioDefault"
-                                    id="homeRadio"
-                                    defaultChecked
-                                  />
-                                  <label
-                                    className="form-check-label text-dark"
-                                    htmlFor="homeRadio"
-                                  >
-                                    Home
-                                  </label>
-                                </div>
-                                {/* address */}
-                                <address>
-                                  {" "}
-                                  <strong>Nitu Chauhan</strong> <br /> 3853 Coal
-                                  Road, <br />
-                                  Tannersville, Pennsylvania, 18372, USA,
-                                  <br />
-                                  <abbr title="Phone">P: 402-776-1106</abbr>
-                                </address>
-                                <span className="text-danger">
-                                  Default address{" "}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="col-lg-6 col-12 mb-4">
-                              {/* input */}
-                              <div className="border p-6 rounded-3">
-                                <div className="form-check mb-4">
-                                  <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="flexRadioDefault"
-                                    id="officeRadio"
-                                  />
-                                  <label
-                                    className="form-check-label text-dark"
-                                    htmlFor="officeRadio"
-                                  >
-                                    Office
-                                  </label>
-                                </div>
-                                <address>
-                                  {" "}
-                                  <strong>Nitu Chauhan</strong> <br /> 3853 Coal
-                                  Road, <br />
-                                  Tannersville, Pennsylvania, 18372, USA,
-                                  <br />
-                                  <abbr title="Phone">P: 402-776-1106</abbr>
-                                </address>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="accordion-item py-4">
-                      <Link
-                        to="#"
-                        className="text-inherit h5"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#flush-collapseThree"
-                        aria-expanded="false"
-                        aria-controls="flush-collapseThree"
-                      >
-                        <i className="feather-icon icon-shopping-bag me-2 text-muted" />
-                        Qo'shimcha ma'lumot
-                        {/* collapse */}{" "}
-                      </Link>
-                      <div
-                        id="flush-collapseThree"
-                        className="accordion-collapse collapse "
-                        data-bs-parent="#accordionFlushExample"
-                      >
-                        <div className="mt-5">
-                          <label
-                            htmlFor="DeliveryInstructions"
-                            className="form-label sr-only"
-                          >
-                            Qo'shimcha ma'lumot
-                          </label>
-                          <textarea
-                            className="form-control"
-                            id="DeliveryInstructions"
-                            rows={3}
-                            placeholder="Yetkazib berish bo'yicha ko'rsatmalar"
-                            defaultValue={""}
-                          />
-                          <p className="form-text">
-                            Qo'shimcha ma'lumotlar, masalan, eshik kodlari yoki
-                            qo'shimcha ko'rsatmalar.
-                          </p>
-                          <div className="mt-5 d-flex justify-content-end">
-                            <Link
-                              to="#"
-                              className="btn btn-outline-gray-400 text-muted"
-                              data-bs-toggle="collapse"
-                              data-bs-target="#flush-collapseTwo"
-                              aria-expanded="false"
-                              aria-controls="flush-collapseTwo"
-                            >
-                              Prev
-                            </Link>
-                            <Link
-                              to="#"
-                              className="btn btn-primary ms-2"
-                              data-bs-toggle="collapse"
-                              data-bs-target="#flush-collapseFour"
-                              aria-expanded="false"
-                              aria-controls="flush-collapseFour"
-                            >
-                              Next
-                            </Link>
+                            {
+                                address.street.length > 0 && (
+                                    <div className="col-lg-6 col-12 mb-4">
+                                    {/* input */}
+                                    <div className="border p-6 rounded-3">
+                                        <div className="form-check mb-4">
+                                        <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="flexRadioDefault"
+                                            id="officeRadio"
+                                        />
+                                        <label
+                                            className="form-check-label text-dark"
+                                            htmlFor="officeRadio"
+                                        >
+                                            Manzil
+                                        </label>
+                                        </div>
+                                        <address>
+                                        {" "}
+                                        <strong>{address.street}</strong> <br /> {address.delivery_instructions}
+                                        <br />
+                                        {address.city}, {address.state}, {address.postal_code}, {address.country}
+                                        <br />
+                                        <abbr title="Pochta kodi">P: {address.postal_code}</abbr>
+                                        </address>
+                                    </div>
+                                    </div>
+                                )
+                            }
                           </div>
                         </div>
                       </div>
@@ -259,22 +169,22 @@ const ShopCheckOut = () => {
                                       className="form-check-input"
                                       type="radio"
                                       name="flexRadioDefault"
-                                      id="paypal"
+                                      id="click"
                                     />
                                     <label
                                       className="form-check-label ms-2"
-                                      htmlFor="paypal"
+                                      htmlFor="click"
                                     ></label>
                                   </div>
                                   <div>
                                     {/* title */}
                                     <h5 className="mb-1 h6">
                                       {" "}
-                                      Payment with Paypal
+                                      Click bilan to'lash
                                     </h5>
                                     <p className="mb-0 small">
-                                      You will be redirected to PayPal website
-                                      to complete your purchase securely.
+                                      Siz Click tizimi orqali to'lovni amalga
+                                      oshirasiz.
                                     </p>
                                   </div>
                                 </div>
@@ -301,12 +211,11 @@ const ShopCheckOut = () => {
                                   <div>
                                     <h5 className="mb-1 h6">
                                       {" "}
-                                      Credit / Debit Card
+                                      Humo yoki UZ cart
                                     </h5>
                                     <p className="mb-0 small">
-                                      Safe money transfer using your bank accou
-                                      k account. We support Mastercard tercard,
-                                      Visa, Discover and Stripe.
+                                      Humo yoki UZ cart orqali to'lovni
+                                      amalga oshirasiz.
                                     </p>
                                   </div>
                                 </div>
@@ -315,7 +224,7 @@ const ShopCheckOut = () => {
                                     {/* input */}
                                     <div className="mb-3">
                                       <label className="form-label">
-                                        Card Number
+                                        Karta raqami{" "}
                                       </label>
                                       <input
                                         type="text"
@@ -328,12 +237,12 @@ const ShopCheckOut = () => {
                                     {/* input */}
                                     <div className="mb-3 mb-lg-0">
                                       <label className="form-label">
-                                        Name on card{" "}
+                                        Kartadagi ism{" "}
                                       </label>
                                       <input
                                         type="text"
                                         className="form-control"
-                                        placeholder="Enter your first name"
+                                        placeholder="Ismingizni kiriting"
                                       />
                                     </div>
                                   </div>
@@ -341,12 +250,12 @@ const ShopCheckOut = () => {
                                     {/* input */}
                                     <div className="mb-3  mb-lg-0 position-relative">
                                       <label className="form-label">
-                                        Expiry date{" "}
+                                        Amal qilish muddati{" "}
                                       </label>
                                       <input
                                         className="form-control flatpickr "
                                         type="text"
-                                        placeholder="Select Date"
+                                        placeholder="Sana tanlang"
                                       />
                                       <div className="position-absolute bottom-0 end-0 p-3 lh-1">
                                         <i className="bi bi-calendar text-muted" />
@@ -357,7 +266,7 @@ const ShopCheckOut = () => {
                                     {/* input */}
                                     <div className="mb-3  mb-lg-0">
                                       <label className="form-label">
-                                        CVV code{" "}
+                                        CVV kod{" "}
                                       </label>
                                       <input
                                         type="text"
@@ -369,39 +278,6 @@ const ShopCheckOut = () => {
                                 </div>
                               </div>
                             </div>
-                            {/* card */}
-                            <div className="card card-bordered shadow-none mb-2">
-                              {/* card body */}
-                              <div className="card-body p-6">
-                                {/* check input */}
-                                <div className="d-flex">
-                                  <div className="form-check">
-                                    <input
-                                      className="form-check-input"
-                                      type="radio"
-                                      name="flexRadioDefault"
-                                      id="payoneer"
-                                    />
-                                    <label
-                                      className="form-check-label ms-2"
-                                      htmlFor="payoneer"
-                                    ></label>
-                                  </div>
-                                  <div>
-                                    {/* title */}
-                                    <h5 className="mb-1 h6">
-                                      {" "}
-                                      Pay with Payoneer
-                                    </h5>
-                                    <p className="mb-0 small">
-                                      You will be redirected to Payoneer website
-                                      to complete your purchase securely.
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            {/* card */}
                             <div className="card card-bordered shadow-none">
                               <div className="card-body p-6">
                                 {/* check input */}
@@ -422,11 +298,11 @@ const ShopCheckOut = () => {
                                     {/* title */}
                                     <h5 className="mb-1 h6">
                                       {" "}
-                                      Cash on Delivery
+                                      Naqd pul bilan to'lash
                                     </h5>
                                     <p className="mb-0 small">
-                                      Pay with cash when your order is
-                                      delivered.
+                                      Buyurtmangiz yetkazib berilganda naqd pul bilan
+                                      to'lang.
                                     </p>
                                   </div>
                                 </div>
@@ -442,10 +318,10 @@ const ShopCheckOut = () => {
                                 aria-expanded="false"
                                 aria-controls="flush-collapseThree"
                               >
-                                Prev
+                                Oldingi
                               </Link>
                               <Link to="#" className="btn btn-primary ms-2">
-                                Place Order
+                                Buyurtma berish
                               </Link>
                             </div>
                           </div>
@@ -506,54 +382,6 @@ const ShopCheckOut = () => {
       </>
       <>
         <div>
-          {/* Modal */}
-          <div
-            className="modal fade"
-            id="deleteModal"
-            tabIndex={-1}
-            aria-labelledby="deleteModalLabel"
-            aria-hidden="true"
-          >
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title" id="deleteModalLabel">
-                    Delete address
-                  </h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  />
-                </div>
-                <div className="modal-body">
-                  <h6>Are you sure you want to delete this address?</h6>
-                  <p className="mb-6">
-                    Jitu Chauhan
-                    <br />
-                    4450 North Avenue Oakland, <br />
-                    Nebraska, United States,
-                    <br />
-                    402-776-1106
-                  </p>
-                </div>
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-outline-gray-400"
-                    data-bs-dismiss="modal"
-                  >
-                    Cancel
-                  </button>
-                  <button type="button" className="btn btn-danger">
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* Modal */}
           <div
             className="modal fade"
             id="addAddressModal"
@@ -569,10 +397,10 @@ const ShopCheckOut = () => {
                     {/* heading */}
                     <div>
                       <h5 className="h6 mb-1" id="addAddressModalLabel">
-                        New Shipping Address
+                        Manzil qo'shish
                       </h5>
                       <p className="small mb-0">
-                        Add new shipping address for your order delivery.
+                        Buyurtma yetkazib berish uchun manzil qo'shing.
                       </p>
                     </div>
                     <div>
@@ -587,32 +415,68 @@ const ShopCheckOut = () => {
                   </div>
                   {/* row */}
                   <div className="row g-3">
+                    <div className="col-12">
+                        <textarea
+                            className="form-control"
+                            id="DeliveryInstructions"
+                            rows={3}
+                            placeholder="Yetkazib berish bo'yicha ko'rsatmalar"
+                            value={newAddress.delivery_instructions}
+                            onChange={(e) =>
+                            setNewAddress({ ...newAddress, delivery_instructions: e.target.value })
+                            }
+                          />
+                    </div>
                     {/* col */}
                     <div className="col-12">
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="First name"
-                        aria-label="First name"
+                        placeholder="Manzil"
+                        aria-label="Manzil"
+                        value={newAddress.street}
+                        onChange={(e) =>
+                          setNewAddress({ ...newAddress, street: e.target.value })
+                        }
                         required
                       />
                     </div>
-                    {/* col */}
                     <div className="col-12">
+                      {/* button */}
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Last name"
-                        aria-label="Last name"
+                        placeholder="Tuman"
+                        value={newAddress.district}
+                        onChange={(e) =>
+                          setNewAddress({ ...newAddress, district: e.target.value })
+                        }
+                      />
+                    </div>
+                    <div className="col-12">
+                      {/* button */}
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Viloyat"
+                        value={newAddress.region}
+                        onChange={(e) =>
+                          setNewAddress({ ...newAddress, region: e.target.value })
+                        }
                         required
                       />
                     </div>
-                    {/* col */}
                     <div className="col-12">
+                      {/* button */}
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Address Line 1"
+                        placeholder="Shahar"
+                        value={newAddress.city}
+                        onChange={(e) =>
+                          setNewAddress({ ...newAddress, city: e.target.value })
+                        }
+                        required
                       />
                     </div>
                     <div className="col-12">
@@ -620,70 +484,13 @@ const ShopCheckOut = () => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Address Line 2"
+                        placeholder="Pochta indeksi"
+                        value={newAddress.postal_code}
+                        onChange={(e) =>
+                          setNewAddress({ ...newAddress, postal_code: e.target.value })
+                        }
+                        required
                       />
-                    </div>
-                    <div className="col-12">
-                      {/* button */}
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="City"
-                      />
-                    </div>
-                    <div className="col-12">
-                      {/* button */}
-                      <select className="form-select">
-                        <option selected> India</option>
-                        <option value={1}>UK</option>
-                        <option value={2}>USA</option>
-                        <option value={3}>UAE</option>
-                      </select>
-                    </div>
-                    <div className="col-12">
-                      {/* button */}
-                      <select
-                        className="form-select"
-                        aria-label="Default select example"
-                      >
-                        <option selected>Gujarat</option>
-                        <option value={1}>Northern Ireland</option>
-                        <option value={2}> Alaska</option>
-                        <option value={3}>Abu Dhabi</option>
-                      </select>
-                    </div>
-                    <div className="col-12">
-                      {/* button */}
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Zip Code"
-                      />
-                    </div>
-                    <div className="col-12">
-                      {/* button */}
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Business Name"
-                      />
-                    </div>
-                    <div className="col-12">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          defaultValue
-                          id="flexCheckDefault"
-                        />
-                        {/* label */}
-                        <label
-                          className="form-check-label"
-                          htmlFor="flexCheckDefault"
-                        >
-                          Set as Default
-                        </label>
-                      </div>
                     </div>
                     {/* button */}
                     <div className="col-12 text-end">
@@ -692,10 +499,10 @@ const ShopCheckOut = () => {
                         className="btn btn-outline-primary"
                         data-bs-dismiss="modal"
                       >
-                        Cancel
+                        Bekor qilish
                       </button>
-                      <button className="btn btn-primary" type="button">
-                        Save Address
+                      <button className="btn btn-primary" type="button" onClick={onSubmitNewAddress}>
+                        Qo'shish
                       </button>
                     </div>
                   </div>
@@ -706,9 +513,6 @@ const ShopCheckOut = () => {
         </div>
       </>
      </>
-    )}
-  </div>
-    </div>
   );
 };
 

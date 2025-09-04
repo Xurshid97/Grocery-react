@@ -7,21 +7,15 @@ const initialState = {
   phone: '',
   accessToken: '',
   isLoggedIn: false,
-  homeAddress: {
-    street: '',
-    city: '',
-    state: '',
-    zip: '',
-    country: '',
-  },
   deliveryAddress: {
+    delivery_instructions: '',
     street: '',
+    district: '',
+    region: '',
     city: '',
-    state: '',
-    zip: '',
-    country: '',
+    postal_code: '',
   },
-};
+}
 
 const userSlice = createSlice({
   name: 'user',
@@ -54,16 +48,12 @@ const userSlice = createSlice({
       state.email = email;
       state.phone = raqam;
     },
-    updateHomeAddress: (state, action) => {
-      const { street, city, state: stateName, zip, country } = action.payload;
-      state.homeAddress = { street, city, state: stateName, zip, country };
-    },
-    updateDeliveryAddress: (state, action) => {
-      const { street, city, state: stateName, zip, country } = action.payload;
-      state.deliveryAddress = { street, city, state: stateName, zip, country };
+    addDeliveryAddress: (state, action) => {
+      const { delivery_instructions, street, district, region, city, postal_code } = action.payload;
+      state.deliveryAddress = { delivery_instructions, street, district, region, city, postal_code };
     },
   },
 });
 
-export const { login, logout, setAccessToken, updateBasicInfo, updateHomeAddress, updateDeliveryAddress } = userSlice.actions;
+export const { login, logout, setAccessToken, updateBasicInfo, addDeliveryAddress } = userSlice.actions;
 export default userSlice.reducer;
