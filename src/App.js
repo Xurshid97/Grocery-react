@@ -41,6 +41,7 @@ import MyAccountSignUp from "./pages/Accounts/MyAccountSignUp";
 import { getProducts } from "./utils/api";
 import { useDispatch } from "react-redux";
 import { setProducts } from "./redux_features/products/product_slice";
+import ScrollToTop from "./utils/ScrollToTop";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -59,6 +60,7 @@ const App = () => {
     <div>
       <Router>
         <Header/>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Grocery-react/" element={<Home />} />

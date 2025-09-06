@@ -2,16 +2,22 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const ProductItem = () => {
   const products = useSelector(state => state.products.list);
   const [selectedProduct, setSelectedProduct] = React.useState(null);
+    const dispatch = useDispatch();
 
-  const handleAddClick = (productName) => {
+  const handleAddClick = (product) => {
+    dispatch({
+        type: 'shop_cart/addToCart',
+        payload: product
+    });
     Swal.fire({
       icon: "success",
       title: "Savatga qo'shildi",
-      text: `${productName} savatga qo'shildi!`,
+      text: `${product.name} savatga qo'shildi!`,
       showConfirmButton: true,
       timer: 2000,
     });
@@ -90,7 +96,7 @@ const ProductItem = () => {
                       </div>
                       <div>
                          <Link to="#!" className="btn btn-primary btn-sm"
-                            onClick={() => handleAddClick(product.name)}>
+                            onClick={() => handleAddClick(product)}>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width={16}
