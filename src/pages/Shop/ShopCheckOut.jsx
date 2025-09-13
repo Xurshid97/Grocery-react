@@ -4,6 +4,7 @@ import ScrollToTop from "../ScrollToTop";
 
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import axiosInstance from "../../utils/axiosInstance";
 
 const ShopCheckOut = () => {
     const shopCartItems = useSelector((state) => state.shopCart.list);
@@ -34,6 +35,37 @@ const ShopCheckOut = () => {
         // close modal
         const modal = document.getElementById('addAddressModal');
         modal.classList.remove('show');
+    }
+
+    function submitOrder() {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            alert("Iltimos, buyurtma berish uchun tizimga kiring.");
+            return;
+        }
+        const orderData = {
+            items: shopCartItems.map(item => ({
+                product_id: item.id,
+                quantity: item.weight,
+            })),
+            delivery_address: address,
+        };
+        console.log("Order Data:", orderData);
+        axiosInstance.post('/orders/', orderData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        })
+        .then(response => {
+            console.log("Order Response:", response.data);
+            alert("Buyurtmangiz muvaffaqiyatli qabul qilindi!");
+            // Clear cart after successful order
+            dispatch({ type: 'shopCart/clearCart' });
+        })
+        .catch(error => {
+            console.error("Error posting order:", error);
+            alert("Buyurtma berishda xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
+        });
     }
 
   return (
@@ -320,7 +352,9 @@ const ShopCheckOut = () => {
                               >
                                 Oldingi
                               </Link>
-                              <Link to="#" className="btn btn-primary ms-2">
+                              <Link to="#" className="btn btn-primary ms-2"
+                                onClick={submitOrder}
+                              >
                                 Buyurtma berish
                               </Link>
                             </div>
@@ -501,7 +535,10 @@ const ShopCheckOut = () => {
                       >
                         Bekor qilish
                       </button>
-                      <button className="btn btn-primary" type="button" onClick={onSubmitNewAddress}>
+                      <button
+                      className="btn btn-primary"
+                      data-bs-dismiss="modal"
+                      type="button" onClick={onSubmitNewAddress}>
                         Qo'shish
                       </button>
                     </div>

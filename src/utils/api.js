@@ -1,6 +1,7 @@
 // create a utility function to handle API requests
 import axios from "axios";
-export const API_BASE_URL = "https://shoyusuf.pythonanywhere.com/api"; // replace with your actual API base URL
+// export const API_BASE_URL = "http://127.0.0.1:8000/api"; // replace with your actual API base URL
+export const API_BASE_URL = "https://shoyusuf.pythonanywhere.com/api";
 
 // function to make post request to the endpoint for registering a new user
 export const registerUser = async (userData) => {
@@ -41,6 +42,20 @@ export const getProducts = async () => {
     return response.data; // return the products data
   } catch (error) {
     console.error("Error fetching products:", error);
+    throw error; // rethrow the error for further handling
+  }
+}
+
+export const postOrder = async (orderData, token) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/orders/`, orderData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    return response.data; // return the order confirmation data
+  } catch (error) {
+    console.error("Error posting order:", error);
     throw error; // rethrow the error for further handling
   }
 }

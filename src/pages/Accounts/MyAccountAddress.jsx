@@ -10,7 +10,7 @@ const MyAccountAddress = () => {
     const userAddress = useSelector((state) => state.user);
 
     const { homeAddress } = userAddress;
-const [width, setWidth] = useState(window.innerWidth);
+    const [width, setWidth] = useState(window.innerWidth);
     useEffect(() => {
         const handleResize = () => setWidth(window.innerWidth);
         window.addEventListener('resize', handleResize);
@@ -53,7 +53,7 @@ const [width, setWidth] = useState(window.innerWidth);
                             <h2 className="mb-0">Manzil</h2>
                           </div>
                           {
-                            homeAddress.street !== "" && (
+                            homeAddress && homeAddress.street !== "" && (
                                 <div className="row">
                                     {/* col */}
                                     <div className="col-lg-5 col-xxl-4 col-12 mb-4">
