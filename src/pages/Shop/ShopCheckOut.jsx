@@ -7,72 +7,76 @@ import { useDispatch } from "react-redux";
 import axiosInstance from "../../utils/axiosInstance";
 
 const ShopCheckOut = () => {
-    const shopCartItems = useSelector((state) => state.shopCart.list);
-    const address = useSelector((state) => state.user.deliveryAddress);
-    // console.log("addresses", address);
-    const dispatch = useDispatch();
-    const [newAddress, setNewAddress] = useState({
-        delivery_instructions: '',
-        street: '',
-        district: '',
-        region: '',
-        city: '',
-        postal_code: '',
+  const userInfo = useSelector((state) => state.user);
+  const shopCartItems = useSelector((state) => state.shopCart.list);
+  const address = useSelector((state) => state.user.deliveryAddress);
+  // console.log("addresses", address);
+  const dispatch = useDispatch();
+  const [newAddress, setNewAddress] = useState({
+    delivery_instructions: "",
+    street: "",
+    district: "",
+    region: "",
+    city: "",
+    postal_code: "",
+  });
+
+  function onSubmitNewAddress() {
+    dispatch({
+      type: "user/addDeliveryAddress",
+      payload: newAddress,
     });
+    setNewAddress({
+      street: "",
+      city: "",
+      state: "",
+      zip: "",
+      country: "",
+    });
+    // close modal
+    const modal = document.getElementById("addAddressModal");
+    modal.classList.remove("show");
+  }
 
-    function onSubmitNewAddress() {
-        dispatch({
-            type: 'user/addDeliveryAddress',
-            payload: newAddress
-        });
-        setNewAddress({
-            street: '',
-            city: '',
-            state: '',
-            zip: '',
-            country: '',
-        });
-        // close modal
-        const modal = document.getElementById('addAddressModal');
-        modal.classList.remove('show');
+  function submitOrder() {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      alert("Iltimos, buyurtma berish uchun tizimga kiring.");
+      return;
     }
-
-    function submitOrder() {
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-            alert("Iltimos, buyurtma berish uchun tizimga kiring.");
-            return;
-        }
-        const orderData = {
-            items: shopCartItems.map(item => ({
-                product_id: item.id,
-                quantity: item.weight,
-            })),
-            delivery_address: address,
-        };
-        console.log("Order Data:", orderData);
-        axiosInstance.post('/orders/', orderData, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        })
-        .then(response => {
-            console.log("Order Response:", response.data);
-            alert("Buyurtmangiz muvaffaqiyatli qabul qilindi!");
-            // Clear cart after successful order
-            dispatch({ type: 'shopCart/clearCart' });
-        })
-        .catch(error => {
-            console.error("Error posting order:", error);
-            alert("Buyurtma berishda xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
-        });
-    }
+    const orderData = {
+      items: shopCartItems.map((item) => ({
+        product_id: item.id,
+        quantity: item.weight,
+      })),
+      delivery_address: address,
+    };
+    console.log("Order Data:", orderData);
+    axiosInstance
+      .post("/orders/", orderData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Order Response:", response.data);
+        alert("Buyurtmangiz muvaffaqiyatli qabul qilindi!");
+        // Clear cart after successful order
+        dispatch({ type: "shopCart/clearCart" });
+      })
+      .catch((error) => {
+        console.error("Error posting order:", error);
+        alert(
+          "Buyurtma berishda xatolik yuz berdi. Iltimos, qayta urinib ko'ring."
+        );
+      });
+  }
 
   return (
     <>
-         <>
-            <ScrollToTop/>
-            </>
+      <>
+        <ScrollToTop />
+      </>
       <>
         {/* section */}
         <section className="mb-lg-14 mb-8 mt-8">
@@ -85,10 +89,12 @@ const ShopCheckOut = () => {
                   <div className="mb-8">
                     {/* text */}
                     <h1 className="fw-bold mb-0">To'lov bo'limi</h1>
-                    <p className="mb-0">
+                    {
+                        userInfo.name.length > 0 ? <span className="text-muted">Salom, {userInfo.name}!</span> : <p className="mb-0">
                       Sizda allaqachon akkaunt bormi{" "}
                       <Link to="/MyAccountSignIn">Login</Link>.
                     </p>
+                    }
                   </div>
                 </div>
               </div>
@@ -135,37 +141,41 @@ const ShopCheckOut = () => {
                       >
                         <div className="mt-5">
                           <div className="row">
-                            {
-                                address.street.length > 0 && (
-                                    <div className="col-lg-6 col-12 mb-4">
-                                    {/* input */}
-                                    <div className="border p-6 rounded-3">
-                                        <div className="form-check mb-4">
-                                        <input
-                                            className="form-check-input"
-                                            type="radio"
-                                            name="flexRadioDefault"
-                                            id="officeRadio"
-                                        />
-                                        <label
-                                            className="form-check-label text-dark"
-                                            htmlFor="officeRadio"
-                                        >
-                                            Manzil
-                                        </label>
-                                        </div>
-                                        <address>
-                                        {" "}
-                                        <strong>{address.street}</strong> <br /> {address.delivery_instructions}
-                                        <br />
-                                        {address.city}, {address.state}, {address.postal_code}, {address.country}
-                                        <br />
-                                        <abbr title="Pochta kodi">P: {address.postal_code}</abbr>
-                                        </address>
-                                    </div>
-                                    </div>
-                                )
-                            }
+                            {address.street.length > 0 && (
+                              <div className="col-lg-6 col-12 mb-4">
+                                {/* input */}
+                                <div className="border p-6 rounded-3">
+                                  <div className="form-check mb-4">
+                                    <input
+                                      className="form-check-input"
+                                      type="radio"
+                                      name="flexRadioDefault"
+                                      id="officeRadio"
+                                    />
+                                    <label
+                                      className="form-check-label text-dark"
+                                      htmlFor="officeRadio"
+                                    >
+                                      Manzil
+                                    </label>
+                                  </div>
+                                  <address>
+                                    {" "}
+                                    <strong>
+                                      {address.street}
+                                    </strong> <br />{" "}
+                                    {address.delivery_instructions}
+                                    <br />
+                                    {address.city}, {address.state},{" "}
+                                    {address.postal_code}, {address.country}
+                                    <br />
+                                    <abbr title="Pochta kodi">
+                                      P: {address.postal_code}
+                                    </abbr>
+                                  </address>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -246,8 +256,8 @@ const ShopCheckOut = () => {
                                       Humo yoki UZ cart
                                     </h5>
                                     <p className="mb-0 small">
-                                      Humo yoki UZ cart orqali to'lovni
-                                      amalga oshirasiz.
+                                      Humo yoki UZ cart orqali to'lovni amalga
+                                      oshirasiz.
                                     </p>
                                   </div>
                                 </div>
@@ -333,8 +343,8 @@ const ShopCheckOut = () => {
                                       Naqd pul bilan to'lash
                                     </h5>
                                     <p className="mb-0 small">
-                                      Buyurtmangiz yetkazib berilganda naqd pul bilan
-                                      to'lang.
+                                      Buyurtmangiz yetkazib berilganda naqd pul
+                                      bilan to'lang.
                                     </p>
                                   </div>
                                 </div>
@@ -352,7 +362,9 @@ const ShopCheckOut = () => {
                               >
                                 Oldingi
                               </Link>
-                              <Link to="#" className="btn btn-primary ms-2"
+                              <Link
+                                to="#"
+                                className="btn btn-primary ms-2"
                                 onClick={submitOrder}
                               >
                                 Buyurtma berish
@@ -371,38 +383,46 @@ const ShopCheckOut = () => {
                         Buyurtma
                       </h5>
                       <ul className="list-group list-group-flush">
-                        {
-                            shopCartItems.map((item, index) => (
-                                <li className="list-group-item px-4 py-3" key={index}>
-                                    <div className="row align-items-center">
-                                        <div className="col-2 col-md-2">
-                                            <img
-                                                src={item.image}
-                                                alt="Ecommerce"
-                                                className="img-fluid"
-                                            />
-                                        </div>
-                                        <div className="col-5 col-md-5">
-                                            <h6 className="mb-0">{item.name}</h6>
-                                            <span>
-                                                <small className="text-muted">{item.weight} kg</small>
-                                            </span>
-                                        </div>
-                                        <div className="col-2 col-md-2 text-center text-muted">
-                                            <span>{item.quantity}</span>
-                                        </div>
-                                        <div className="col-3 text-lg-end text-start text-md-end col-md-3">
-                                            <span className="fw-bold">{item.cost} so'm</span>
-                                        </div>
-                                    </div>
-                                </li>
-                            ))
-                        }
+                        {shopCartItems.map((item, index) => (
+                          <li className="list-group-item px-4 py-3" key={index}>
+                            <div className="row align-items-center">
+                              <div className="col-2 col-md-2">
+                                <img
+                                  src={item.image}
+                                  alt="Ecommerce"
+                                  className="img-fluid"
+                                />
+                              </div>
+                              <div className="col-5 col-md-5">
+                                <h6 className="mb-0">{item.name}</h6>
+                                <span>
+                                  <small className="text-muted">
+                                    {item.weight} kg
+                                  </small>
+                                </span>
+                              </div>
+                              <div className="col-2 col-md-2 text-center text-muted">
+                                <span>{item.quantity}</span>
+                              </div>
+                              <div className="col-3 text-lg-end text-start text-md-end col-md-3">
+                                <span className="fw-bold">
+                                  {item.cost} so'm
+                                </span>
+                              </div>
+                            </div>
+                          </li>
+                        ))}
                         {/* list group item */}
                         <li className="list-group-item px-4 py-3">
                           <div className="d-flex align-items-center justify-content-between fw-bold">
                             <div>Umumiy</div>
-                            <div>{shopCartItems.reduce((acc, item) => acc + item.cost * item.weight, 0)} so'm</div>
+                            <div>
+                              {shopCartItems.reduce(
+                                (acc, item) => acc + item.cost * item.weight,
+                                0
+                              )}{" "}
+                              so'm
+                            </div>
                           </div>
                         </li>
                       </ul>
@@ -450,16 +470,19 @@ const ShopCheckOut = () => {
                   {/* row */}
                   <div className="row g-3">
                     <div className="col-12">
-                        <textarea
-                            className="form-control"
-                            id="DeliveryInstructions"
-                            rows={3}
-                            placeholder="Yetkazib berish bo'yicha ko'rsatmalar"
-                            value={newAddress.delivery_instructions}
-                            onChange={(e) =>
-                            setNewAddress({ ...newAddress, delivery_instructions: e.target.value })
-                            }
-                          />
+                      <textarea
+                        className="form-control"
+                        id="DeliveryInstructions"
+                        rows={3}
+                        placeholder="Yetkazib berish bo'yicha ko'rsatmalar"
+                        value={newAddress.delivery_instructions}
+                        onChange={(e) =>
+                          setNewAddress({
+                            ...newAddress,
+                            delivery_instructions: e.target.value,
+                          })
+                        }
+                      />
                     </div>
                     {/* col */}
                     <div className="col-12">
@@ -470,7 +493,10 @@ const ShopCheckOut = () => {
                         aria-label="Manzil"
                         value={newAddress.street}
                         onChange={(e) =>
-                          setNewAddress({ ...newAddress, street: e.target.value })
+                          setNewAddress({
+                            ...newAddress,
+                            street: e.target.value,
+                          })
                         }
                         required
                       />
@@ -483,7 +509,10 @@ const ShopCheckOut = () => {
                         placeholder="Tuman"
                         value={newAddress.district}
                         onChange={(e) =>
-                          setNewAddress({ ...newAddress, district: e.target.value })
+                          setNewAddress({
+                            ...newAddress,
+                            district: e.target.value,
+                          })
                         }
                       />
                     </div>
@@ -495,7 +524,10 @@ const ShopCheckOut = () => {
                         placeholder="Viloyat"
                         value={newAddress.region}
                         onChange={(e) =>
-                          setNewAddress({ ...newAddress, region: e.target.value })
+                          setNewAddress({
+                            ...newAddress,
+                            region: e.target.value,
+                          })
                         }
                         required
                       />
@@ -521,7 +553,10 @@ const ShopCheckOut = () => {
                         placeholder="Pochta indeksi"
                         value={newAddress.postal_code}
                         onChange={(e) =>
-                          setNewAddress({ ...newAddress, postal_code: e.target.value })
+                          setNewAddress({
+                            ...newAddress,
+                            postal_code: e.target.value,
+                          })
                         }
                         required
                       />
@@ -536,9 +571,11 @@ const ShopCheckOut = () => {
                         Bekor qilish
                       </button>
                       <button
-                      className="btn btn-primary"
-                      data-bs-dismiss="modal"
-                      type="button" onClick={onSubmitNewAddress}>
+                        className="btn btn-primary"
+                        data-bs-dismiss="modal"
+                        type="button"
+                        onClick={onSubmitNewAddress}
+                      >
                         Qo'shish
                       </button>
                     </div>
@@ -549,7 +586,7 @@ const ShopCheckOut = () => {
           </div>
         </div>
       </>
-     </>
+    </>
   );
 };
 
