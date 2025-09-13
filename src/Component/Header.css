@@ -5,19 +5,19 @@
   z-index: 1000;
   width: 100%;
   background-color: white;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Cart badge */
 .cart-badge {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 10px;
+  right: 30%;
   transform: translate(50%, -50%);
   background-color: #198754;
   color: white;
   font-size: 0.7rem;
-  padding: 2px 5px;
+  padding: 2px 7px;
   border-radius: 50%;
 }
 
@@ -28,7 +28,10 @@
     bottom: 0;
     top: auto;
     width: 100%;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .navbar-nav .nav-item .nav-link {
+    position: relative; /* parent of badge */
   }
 
   .navbar-nav {
@@ -37,7 +40,7 @@
     width: 100%;
   }
 
-  .navbar-nav .nav-item .nav-link span {
+  .navbar-nav .nav-item .nav-link span:not(.cart-badge) {
     display: none; /* hide text labels */
   }
 
@@ -52,8 +55,14 @@
   }
 
   .cart-badge {
-    top: -5px;
-    right: 30%;
+    position: absolute;
+    top: 10px;
+    right: 40%;
     transform: translate(50%, -50%);
+    background-color: #198754;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 7px;
+    border-radius: 50%;
   }
 }

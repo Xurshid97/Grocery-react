@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import "./Header.css";
 
 const Header = () => {
-  const shopCartItems = useSelector((state) => state.shopCart.list);
+  const shopCartItems = useSelector(state => state.shopCart.list);
 
   return (
     <div className="navbar-wrapper">
@@ -21,7 +21,7 @@ const Header = () => {
           </Link>
 
           {/* Nav items */}
-          <ul className="navbar-nav d-flex flex-row flex-lg-column align-items-center justify-content-around w-100">
+          <ul className="navbar-nav d-flex flex-row flex-wrap align-items-center justify-content-around w-80">
             {/* Home */}
             <li className="nav-item">
               <Link
