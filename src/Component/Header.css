@@ -1,0 +1,59 @@
+/* Desktop: sticky top */
+.navbar-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Cart badge */
+.cart-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  background-color: #198754;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 5px;
+  border-radius: 50%;
+}
+
+/* Mobile: fixed bottom, icons only */
+@media (max-width: 992px) {
+  .navbar-wrapper {
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    width: 100%;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+  }
+
+  .navbar-nav {
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  .navbar-nav .nav-item .nav-link span {
+    display: none; /* hide text labels */
+  }
+
+  .navbar-nav .nav-item {
+    flex: 1;
+    text-align: center;
+  }
+
+  .navbar-nav .nav-item .nav-link svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .cart-badge {
+    top: -5px;
+    right: 30%;
+    transform: translate(50%, -50%);
+  }
+}
